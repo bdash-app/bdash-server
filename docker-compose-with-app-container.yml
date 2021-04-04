@@ -1,0 +1,36 @@
+version: "3.7"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    depends_on:
+      - db
+    env_file: ./.env.local
+    environment:
+      - DATABASE_URL=mysql://root:root@db:3306/bdash_server_dev
+    links:
+      - db
+    command: sh -c "yarn run db:migrate:production && yarn run start:production"
+  db:
+    image: mysql:5.7
+    volumes:
+      - data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=bdash_server_dev
+    ports:
+      - "3307:3306"
+  db_test:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=bdash_server_dev
+    ports:
+      - "3308:3306"
+
+volumes:
+  data:

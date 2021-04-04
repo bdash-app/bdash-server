@@ -1,0 +1,66 @@
+{
+  "name": "bdash-server",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "docker-compose -f docker-compose-dev.yml up -d && blitz dev",
+    "build": "prisma generate --schema db/schema.prisma && blitz build",
+    "start": "blitz start",
+    "start:production": "blitz start --port $PORT",
+    "db:migrate": "blitz prisma migrate dev --preview-feature",
+    "db:migrate:production": "blitz prisma migrate deploy --preview-feature",
+    "studio": "blitz prisma studio",
+    "lint": "eslint --ignore-path .gitignore --ext .js,.ts,.tsx .",
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "prisma": {
+    "schema": "db/schema.prisma"
+  },
+  "prettier": {
+    "semi": false,
+    "printWidth": 100
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged && pretty-quick --staged",
+      "pre-push": "tsc && npm run lint && npm run test"
+    }
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx}": [
+      "eslint --fix"
+    ]
+  },
+  "dependencies": {
+    "@chakra-ui/icons": "1.0.7",
+    "@chakra-ui/react": "1.1.2",
+    "@emotion/react": "11.1.4",
+    "@emotion/styled": "11.0.0",
+    "@prisma/client": "~2.17",
+    "blitz": "0.33.1",
+    "final-form": "4.20.2",
+    "framer-motion": "3.2.0",
+    "passport-google-oauth20": "2.0.0",
+    "prisma": "~2.17",
+    "react": "0.0.0-experimental-3310209d0",
+    "react-dom": "0.0.0-experimental-3310209d0",
+    "react-error-boundary": "3.1.1",
+    "react-final-form": "6.5.3",
+    "react-syntax-highlighter": "15.4.3",
+    "typescript": "~4.1",
+    "zod": "1.11.13"
+  },
+  "devDependencies": {
+    "@types/preview-email": "2.0.0",
+    "@types/react": "17.0.3",
+    "@types/react-syntax-highlighter": "13.5.0",
+    "eslint": "7.22.0",
+    "husky": "4.3.8",
+    "lint-staged": "10.5.4",
+    "prettier": "2.2.1",
+    "prettier-plugin-prisma": "0.6.0",
+    "pretty-quick": "3.1.0",
+    "preview-email": "3.0.3"
+  },
+  "private": true
+}
