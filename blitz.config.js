@@ -1,9 +1,6 @@
 const { sessionMiddleware, simpleRolesIsAuthorized } = require("blitz")
 
 module.exports = {
-  env: {
-    WEB_HOST: process.env.WEB_HOST,
-  },
   middleware: [
     sessionMiddleware({
       isAuthorized: simpleRolesIsAuthorized,
@@ -19,7 +16,7 @@ module.exports = {
     // Important: return the modified config
     if (!isServer) {
       config.node = {
-        fs: 'empty'
+        fs: "empty",
       }
     }
     return config
@@ -27,11 +24,11 @@ module.exports = {
 }
 
 function revision() {
-  const fs = require("fs");
-  const path = require("path");
+  const fs = require("fs")
+  const path = require("path")
   try {
-    return fs.readFileSync(path.join(__dirname, "REVISION")).toString();
+    return fs.readFileSync(path.join(__dirname, "REVISION")).toString()
   } catch (error) {
-    return null;
+    return null
   }
 }
