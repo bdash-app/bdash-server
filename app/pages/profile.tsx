@@ -65,7 +65,7 @@ const UserInfo = () => {
         Access Token: <Code colorScheme="blackAlpha">{currentUser?.accessToken}</Code>
       </Text>
       {currentUser && (
-        <Link href="/users/[userId]" as={`/users/${currentUser.id}`}>
+        <Link href="/user/[userId]" as={`/user/${currentUser.id}`}>
           <a>
             <Button marginTop={2} colorScheme="teal">
               Queries

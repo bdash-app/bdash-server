@@ -41,7 +41,7 @@ export const BdashQuery = () => {
         <Heading as="h2" size="lg" marginBottom={2}>
           {bdashQuery.title}
         </Heading>
-        <Link href="/users/[userId]" as={`/users/${bdashQuery.user.id}`}>
+        <Link href="/user/[userId]" as={`/user/${bdashQuery.user.id}`}>
           <a>
             <HStack marginBottom={4}>
               <Avatar size="xs" src={bdashQuery.user.icon} />
