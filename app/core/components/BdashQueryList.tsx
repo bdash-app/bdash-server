@@ -2,6 +2,7 @@ import { BdashQuery, User } from "db"
 import React from "react"
 import { UnorderedList, ListItem, HStack, Text, Avatar } from "@chakra-ui/react"
 import { Link } from "blitz"
+import { format } from "date-fns"
 
 type Props = {
   queries: (BdashQuery & { user: User })[]
@@ -26,6 +27,9 @@ export const BdashQueryList: React.FC<Props> = ({ queries }) => {
                   {query.user.name}
                 </a>
               </Link>
+            </Text>
+            <Text fontSize="sm" color="gray.500">
+              {format(query.createdAt, "(yyyy-MM-dd)")}
             </Text>
           </HStack>
         </ListItem>

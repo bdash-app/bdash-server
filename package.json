@@ -38,6 +38,7 @@
     "@emotion/styled": "11.0.0",
     "@prisma/client": "~2.17",
     "blitz": "0.33.1",
+    "date-fns": "2.19.0",
     "final-form": "4.20.2",
     "framer-motion": "3.2.0",
     "passport-google-oauth20": "2.0.0",

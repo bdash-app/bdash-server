@@ -26,7 +26,7 @@ const Home = () => {
       </Head>
 
       <Box bg="white" pl={10} pr={10} pt={5} pb={5} borderRadius="xl">
-        <Heading as="h2" size="lg" marginBottom={2}>
+        <Heading as="h2" size="lg" marginBottom={4}>
           All Queries
         </Heading>
         <BdashQueryList
