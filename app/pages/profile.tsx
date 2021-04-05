@@ -81,7 +81,7 @@ const UserInfo = () => {
         </Text>
         <Text>
           GitHub Enterprise URL:{" "}
-          <Code colorScheme="blackAlpha">{`${window.location.protocol}//${window.location.host}/api/queries`}</Code>
+          <Code colorScheme="blackAlpha">{`${window.location.protocol}//${window.location.host}/api/bdash-query`}</Code>
         </Text>
       </VStack>
     </VStack>
