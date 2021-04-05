@@ -2,7 +2,7 @@ import React, { Suspense } from "react"
 import { Head, useQuery, useParam, BlitzPage } from "blitz"
 import Layout from "app/core/layouts/Layout"
 import getUser from "app/users/queries/getUser"
-import { Box, Heading } from "@chakra-ui/react"
+import { Box, Heading, Spinner } from "@chakra-ui/react"
 import { BdashQueryList } from "../../core/components/BdashQueryList"
 
 export const User = () => {
@@ -27,7 +27,7 @@ export const User = () => {
 
 const ShowUserPage: BlitzPage = () => {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<Spinner color="teal" />}>
       <User />
     </Suspense>
   )

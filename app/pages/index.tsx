@@ -1,7 +1,7 @@
 import { Suspense } from "react"
 import { Head, BlitzPage, usePaginatedQuery, useRouter } from "blitz"
 import Layout from "app/core/layouts/Layout"
-import { Box, Button, HStack, Heading } from "@chakra-ui/react"
+import { Box, Button, HStack, Heading, Spinner } from "@chakra-ui/react"
 import { BdashQueryList } from "../core/components/BdashQueryList"
 import getBdashQueries from "app/bdash-queries/queries/getBdashQueries"
 
@@ -49,7 +49,7 @@ const Home = () => {
 
 const ShowHomePage: BlitzPage = () => {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<Spinner color="teal" />}>
       <Home />
     </Suspense>
   )

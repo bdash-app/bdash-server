@@ -8,18 +8,15 @@ import {
   Text,
   Code,
   Button,
-  useEditableControls,
-  Flex,
-  ButtonGroup,
-  IconButton,
   Editable,
   EditablePreview,
   EditableInput,
   HStack,
   Heading,
+  Spinner,
 } from "@chakra-ui/react"
-import { CheckIcon, CloseIcon, EditIcon } from "@chakra-ui/icons"
 import updateUser from "app/users/mutations/updateUser"
+import { EditableControls } from "app/core/components/EditableControls"
 
 const UserInfo = () => {
   const currentUser = useCurrentUser()
@@ -88,33 +85,13 @@ const UserInfo = () => {
   )
 }
 
-const EditableControls = () => {
-  const {
-    isEditing,
-    getSubmitButtonProps,
-    getCancelButtonProps,
-    getEditButtonProps,
-  } = useEditableControls()
-
-  return isEditing ? (
-    <ButtonGroup justifyContent="center" size="sm">
-      <IconButton icon={<CheckIcon />} {...(getSubmitButtonProps() as any)} />
-      <IconButton icon={<CloseIcon />} {...(getCancelButtonProps() as any)} />
-    </ButtonGroup>
-  ) : (
-    <Flex justifyContent="center">
-      <IconButton size="sm" icon={<EditIcon />} {...(getEditButtonProps() as any)} />
-    </Flex>
-  )
-}
-
 const ProfilePage = () => {
   return (
     <>
       <Head>
         <title>{`Profile | Bdash Server`}</title>
       </Head>
-      <Suspense fallback="Loading...">
+      <Suspense fallback={<Spinner color="teal" />}>
         <UserInfo />
       </Suspense>
     </>
