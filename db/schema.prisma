@@ -76,7 +76,7 @@ model BdashQuery {
   title       String
   description String   @db.Text
   query_sql   String   @db.Text
-  result_tsv  String   @db.Text
+  result_tsv  String   @db.MediumText
   metadata_md String   @db.VarChar(512)
   chart_svg   String?  @db.MediumText
 }
