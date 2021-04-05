@@ -51,7 +51,7 @@ const postBdashQuery = async (req: BlitzApiRequest, res: BlitzApiResponse) => {
 
   res.statusCode = 201
   res.setHeader("Content-Type", "application/json")
-  res.end(JSON.stringify({ html_url: `${process.env.WEB_HOST}/querie/${bdashQuery.id}` }))
+  res.end(JSON.stringify({ html_url: `${process.env.WEB_HOST}/query/${bdashQuery.id}` }))
 }
 
 export default postBdashQuery

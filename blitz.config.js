@@ -1,6 +1,9 @@
 const { sessionMiddleware, simpleRolesIsAuthorized } = require("blitz")
 
 module.exports = {
+  env: {
+    WEB_HOST: process.env.WEB_HOST,
+  },
   middleware: [
     sessionMiddleware({
       isAuthorized: simpleRolesIsAuthorized,

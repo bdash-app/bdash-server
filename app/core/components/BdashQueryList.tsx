@@ -13,7 +13,7 @@ export const BdashQueryList: React.FC<Props> = ({ queries }) => {
       {queries.map((query) => (
         <ListItem>
           <HStack>
-            <Link href="/querie/[bdashQueryId]" as={`/querie/${query.id}`}>
+            <Link href="/query/[bdashQueryId]" as={`/query/${query.id}`}>
               <a>
                 <Text fontSize="xl">{query.title}</Text>
               </a>

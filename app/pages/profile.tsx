@@ -16,6 +16,7 @@ import {
   EditablePreview,
   EditableInput,
   HStack,
+  Heading,
 } from "@chakra-ui/react"
 import { CheckIcon, CloseIcon, EditIcon } from "@chakra-ui/icons"
 import updateUser from "app/users/mutations/updateUser"
@@ -61,9 +62,6 @@ const UserInfo = () => {
           <EditableControls />
         </HStack>
       </Editable>
-      <Text>
-        Access Token: <Code colorScheme="blackAlpha">{currentUser?.accessToken}</Code>
-      </Text>
       {currentUser && (
         <Link href="/user/[userId]" as={`/user/${currentUser.id}`}>
           <a>
@@ -73,6 +71,19 @@ const UserInfo = () => {
           </a>
         </Link>
       )}
+      <VStack align="flex-start">
+        <Heading as="h2" fontSize="2xl" marginTop={3}>
+          Bdash client config
+        </Heading>
+        <Text>Set the following values to Bdash client config.</Text>
+        <Text>
+          Access Token: <Code colorScheme="blackAlpha">{currentUser?.accessToken}</Code>
+        </Text>
+        <Text>
+          GitHub Enterprise URL:{" "}
+          <Code colorScheme="blackAlpha">{`${process.env.WEB_HOST}/api/queries`}</Code>
+        </Text>
+      </VStack>
     </VStack>
   )
 }
