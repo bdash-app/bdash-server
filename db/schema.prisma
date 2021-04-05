@@ -74,9 +74,9 @@ model BdashQuery {
   user        User     @relation(fields: [userId], references: [id])
   userId      Int
   title       String
-  description String
-  query_sql   String
-  result_tsv  String
-  metadata_md String
-  chart_svg   String?
+  description String   @db.Text
+  query_sql   String   @db.Text
+  result_tsv  String   @db.Text
+  metadata_md String   @db.VarChar(512)
+  chart_svg   String?  @db.MediumText
 }
