@@ -38,6 +38,7 @@ import { a11yLight } from "react-syntax-highlighter/dist/cjs/styles/hljs"
 import { format } from "date-fns"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import updateBdashQuery from "app/bdash-queries/mutations/updateBdashQuery"
+import deleteBdashQuery from "app/bdash-queries/mutations/deleteBdashQuery"
 
 const MAX_DISPLAY_ROWS = 1000
 
@@ -55,6 +56,7 @@ export const BdashQuery = () => {
   const [editingTitle, setEditingTitle] = useState(bdashQuery.title)
   const [editingDescription, setEditingDescription] = useState(bdashQuery.description)
   const [updateBdashQueryMutation] = useMutation(updateBdashQuery)
+  const [deleteBdashQueryMutation] = useMutation(deleteBdashQuery)
   const toast = useToast()
   const onClickEditSave = useCallback(async () => {
     if (currentUser === null) {
@@ -88,9 +90,20 @@ export const BdashQuery = () => {
     toast,
     updateBdashQueryMutation,
   ])
-  const onClickEditCancel = () => {
+  const onClickDelete = useCallback(async () => {
+    if (window.confirm("Are you sure you want to delete this query?")) {
+      try {
+        await deleteBdashQueryMutation({ id: bdashQuery.id })
+        window.location.href = `/user/${bdashQuery.userId}`
+      } catch (error) {
+        console.error(error)
+        window.alert("Failed to delete query")
+      }
+    }
+  }, [])
+  const onClickEditCancel = useCallback(() => {
     onCloseEditModal()
-  }
+  }, [onCloseEditModal])
   const onChangeEditTitle = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const title = e.target.value
     setEditingTitle(title)
@@ -186,6 +199,11 @@ export const BdashQuery = () => {
           </ModalBody>
 
           <ModalFooter>
+            <Flex flex={1}>
+              <Button colorScheme="red" mr={3} onClick={onClickDelete} alignSelf="flex-start">
+                Delete
+              </Button>
+            </Flex>
             <Button colorScheme="teal" mr={3} onClick={onClickEditSave}>
               Save
             </Button>
