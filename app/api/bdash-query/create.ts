@@ -1,5 +1,6 @@
 import { BlitzApiRequest, BlitzApiResponse } from "blitz"
 import db, { Prisma } from "db"
+import { createHash } from "crypto"
 
 type BdashClientRequestBody = { description: string; files: { [key: string]: { content: string } } }
 
@@ -17,7 +18,13 @@ const postBdashQuery = async (req: BlitzApiRequest, res: BlitzApiResponse) => {
   }
 
   const body = req.body as BdashClientRequestBody
+
+  const currentDate = new Date().toString()
+  const random = Math.random().toString()
+  const idHash = createHash("md5").update(`${user.id}_${currentDate}_${random}`).digest("hex")
+
   const data: Prisma.BdashQueryCreateArgs["data"] = {
+    id_hash: idHash,
     userId: user.id,
     title: body.description,
     description: "",
@@ -47,11 +54,11 @@ const postBdashQuery = async (req: BlitzApiRequest, res: BlitzApiResponse) => {
     }
   })
 
-  const bdashQuery = await db.bdashQuery.create({ data, select: { id: true } })
+  const bdashQuery = await db.bdashQuery.create({ data, select: { id_hash: true } })
 
   res.statusCode = 201
   res.setHeader("Content-Type", "application/json")
-  res.end(JSON.stringify({ html_url: `${process.env.WEB_HOST}/query/${bdashQuery.id}` }))
+  res.end(JSON.stringify({ html_url: `${process.env.WEB_HOST}/query/${bdashQuery.id_hash}` }))
 }
 
 export default postBdashQuery

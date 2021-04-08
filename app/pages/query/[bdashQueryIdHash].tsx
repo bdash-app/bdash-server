@@ -44,8 +44,8 @@ const MAX_DISPLAY_ROWS = 1000
 
 export const BdashQuery = () => {
   const currentUser = useCurrentUser()
-  const bdashQueryId = useParam("bdashQueryId", "number")
-  const [bdashQuery] = useQuery(getBdashQuery, { id: bdashQueryId })
+  const bdashQueryIdHash = useParam("bdashQueryIdHash", "string")
+  const [bdashQuery] = useQuery(getBdashQuery, { idHash: bdashQueryIdHash })
   const {
     isOpen: isOpenEditModal,
     onOpen: onOpenEditModal,
@@ -100,7 +100,7 @@ export const BdashQuery = () => {
         window.alert("Failed to delete query")
       }
     }
-  }, [])
+  }, [bdashQuery.id, bdashQuery.userId, deleteBdashQueryMutation])
   const onClickEditCancel = useCallback(() => {
     onCloseEditModal()
   }, [onCloseEditModal])
