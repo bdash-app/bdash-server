@@ -32,7 +32,6 @@ const postBdashQuery = async (req: BlitzApiRequest, res: BlitzApiResponse) => {
     title: body.description,
     description: "",
     query_sql: "",
-    result_tsv: "",
     metadata_md: "",
     chart_svg: null,
   }
