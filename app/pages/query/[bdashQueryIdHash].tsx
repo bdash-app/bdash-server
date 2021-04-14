@@ -1,4 +1,4 @@
-import React, { memo, Suspense, useCallback, useMemo, useState } from "react"
+import React, { memo, Suspense, useCallback, useEffect, useMemo, useState } from "react"
 import { Head, useQuery, useParam, BlitzPage, Link, useMutation } from "blitz"
 import Layout from "app/core/layouts/Layout"
 import getBdashQuery from "app/bdash-queries/queries/getBdashQuery"
@@ -58,6 +58,25 @@ export const BdashQuery = () => {
   const [updateBdashQueryMutation] = useMutation(updateBdashQuery)
   const [deleteBdashQueryMutation] = useMutation(deleteBdashQuery)
   const toast = useToast()
+  const [isLoadingResultTSV, setIsLoadingResultTSV] = useState(false)
+  const [resultTSV, setResultTSV] = useState("")
+  useEffect(() => {
+    const f = async () => {
+      setIsLoadingResultTSV(true)
+      const res = await fetch(`/api/bdash-query/${bdashQueryIdHash}/result`)
+      setIsLoadingResultTSV(false)
+      if (res.ok) {
+        const tsv = await res.text()
+        setResultTSV(tsv)
+      } else {
+        toast({
+          title: "Failed to retrieve result table data.",
+          status: "error",
+        })
+      }
+    }
+    f()
+  }, [bdashQueryIdHash, toast])
   const onClickEditSave = useCallback(async () => {
     if (currentUser === null) {
       return
@@ -113,10 +132,9 @@ export const BdashQuery = () => {
     setEditingDescription(description)
   }, [])
 
-  const resultTsvRows = useMemo(
-    () => bdashQuery.result_tsv.split("\n").map((row) => row.split("\t")),
-    [bdashQuery.result_tsv]
-  )
+  const resultTsvRows = useMemo(() => resultTSV.split("\n").map((row) => row.split("\t")), [
+    resultTSV,
+  ])
   const headerRow = useMemo(() => resultTsvRows.shift() || [], [resultTsvRows])
 
   return (
@@ -246,35 +264,47 @@ const SectionHeader: React.FC<{
 )
 
 const ResultSection = memo(
-  ({ headerRow, resultTsvRows }: { headerRow: string[]; resultTsvRows: string[][] }) => {
+  ({
+    headerRow,
+    resultTsvRows,
+    isLoading,
+  }: {
+    headerRow: string[]
+    resultTsvRows: string[][]
+    isLoading: boolean
+  }) => {
     return (
       <Box>
         <SectionHeader text="Result" />
         <Box bg="white" pl={10} pr={10} pt={10} pb={5} borderRadius="xl">
           <Box borderColor="gray.300" borderWidth="1px" borderRadius="lg" overflow="hidden">
-            <Table variant="striped" size="sm" colorScheme="blackAlpha">
-              <TableCaption placement="top">
-                {resultTsvRows.length < MAX_DISPLAY_ROWS
-                  ? `${resultTsvRows.length} rows`
-                  : `Displaying ${MAX_DISPLAY_ROWS} of ${resultTsvRows.length} rows`}
-              </TableCaption>
-              <Thead>
-                <Tr>
-                  {headerRow?.map((columnName) => (
-                    <Th key={columnName}>{columnName}</Th>
-                  ))}
-                </Tr>
-              </Thead>
-              <Tbody>
-                {resultTsvRows.slice(0, MAX_DISPLAY_ROWS).map((row) => (
-                  <Tr key={row.join()}>
-                    {row.map((column, i) => (
-                      <Td key={`${column}_${i}`}>{column}</Td>
+            {isLoading ? (
+              <Spinner color="teal" />
+            ) : (
+              <Table variant="striped" size="sm" colorScheme="blackAlpha">
+                <TableCaption placement="top">
+                  {resultTsvRows.length < MAX_DISPLAY_ROWS
+                    ? `${resultTsvRows.length} rows`
+                    : `Displaying ${MAX_DISPLAY_ROWS} of ${resultTsvRows.length} rows`}
+                </TableCaption>
+                <Thead>
+                  <Tr>
+                    {headerRow?.map((columnName) => (
+                      <Th key={columnName}>{columnName}</Th>
                     ))}
                   </Tr>
-                ))}
-              </Tbody>
-            </Table>
+                </Thead>
+                <Tbody>
+                  {resultTsvRows.slice(0, MAX_DISPLAY_ROWS).map((row) => (
+                    <Tr key={row.join()}>
+                      {row.map((column, i) => (
+                        <Td key={`${column}_${i}`}>{column}</Td>
+                      ))}
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
+            )}
           </Box>
         </Box>
       </Box>

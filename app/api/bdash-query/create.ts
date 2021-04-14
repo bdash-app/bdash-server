@@ -62,10 +62,11 @@ const postBdashQuery = async (req: BlitzApiRequest, res: BlitzApiResponse) => {
     }
   })
 
-  const bdashQuery = await db.bdashQuery.create({ data, select: { id: true, id_hash: true } })
   if (resultTSVFilePath) {
-    uploadResultTSV(bdashQuery.id, resultTSVFilePath)
+    await uploadResultTSV(idHash, resultTSVFilePath)
   }
+
+  const bdashQuery = await db.bdashQuery.create({ data, select: { id_hash: true } })
 
   res.statusCode = 201
   res.setHeader("Content-Type", "application/json")
