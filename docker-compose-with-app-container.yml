@@ -12,13 +12,15 @@ services:
     env_file: ./.env.local
     environment:
       - DATABASE_URL=mysql://root:root@db:3306/bdash_server_dev
+      - MINIO_URL=http://minio:9000
     links:
       - db
+      - minio
     command: sh -c "yarn run db:migrate:production && yarn run start:production"
   db:
     image: mysql:5.7
     volumes:
-      - data:/var/lib/mysql
+      - mysql-data:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=bdash_server_dev
@@ -31,6 +33,30 @@ services:
       - MYSQL_DATABASE=bdash_server_dev
     ports:
       - "3308:3306"
+  minio:
+    image: minio/minio
+    ports:
+      - "9001:9000"
+    volumes:
+      - minio-data:/minio-data
+    env_file: ./.env.local
+    command: server /minio-data
+  createbuckets:
+    image: minio/mc:RELEASE.2019-10-09T22-54-57Z
+    depends_on:
+      - minio
+    links:
+      - minio
+    env_file: ./.env.local
+    entrypoint: ""
+    command: >
+      sh -c "
+      until (mc config host add minio_host http://minio:9000 $${MINIO_ACCESS_KEY} $${MINIO_SECRET_KEY}) do echo '...waiting...' && sleep 1; done;
+      mc mb minio_host/$${S3_BUCKET};
+      mc policy set public minio_host/$${S3_BUCKET};
+      exit 0;
+      "
 
 volumes:
-  data:
+  mysql-data:
+  minio-data:

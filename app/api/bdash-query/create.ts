@@ -1,6 +1,9 @@
 import { BlitzApiRequest, BlitzApiResponse } from "blitz"
 import db, { Prisma } from "db"
 import { createHash } from "crypto"
+import { uploadResultTSV } from "app/core/lib/s3"
+import tmp from "tmp"
+import fs from "fs"
 
 type BdashClientRequestBody = { description: string; files: { [key: string]: { content: string } } }
 
@@ -33,6 +36,9 @@ const postBdashQuery = async (req: BlitzApiRequest, res: BlitzApiResponse) => {
     metadata_md: "",
     chart_svg: null,
   }
+
+  let resultTSVFilePath: string | null = null
+
   Object.entries(body.files).forEach(([key, value]) => {
     const extension = key.split(".").slice(-1)[0]
     switch (extension) {
@@ -40,7 +46,9 @@ const postBdashQuery = async (req: BlitzApiRequest, res: BlitzApiResponse) => {
         data.query_sql = value.content
         break
       case "tsv":
-        data.result_tsv = value.content
+        const tmpFile = tmp.fileSync({ mode: 0o755, prefix: "result", postfix: ".csv" })
+        fs.writeFileSync(tmpFile.name, value.content)
+        resultTSVFilePath = tmpFile.name
         break
       case "md":
         data.metadata_md = value.content
@@ -54,7 +62,10 @@ const postBdashQuery = async (req: BlitzApiRequest, res: BlitzApiResponse) => {
     }
   })
 
-  const bdashQuery = await db.bdashQuery.create({ data, select: { id_hash: true } })
+  const bdashQuery = await db.bdashQuery.create({ data, select: { id: true, id_hash: true } })
+  if (resultTSVFilePath) {
+    uploadResultTSV(bdashQuery.id, resultTSVFilePath)
+  }
 
   res.statusCode = 201
   res.setHeader("Content-Type", "application/json")
