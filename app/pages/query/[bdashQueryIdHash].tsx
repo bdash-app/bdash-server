@@ -185,7 +185,11 @@ export const BdashQuery = () => {
       <VStack spacing={10} align="stretch">
         <SqlSection querySql={bdashQuery.query_sql} />
         {bdashQuery.chart_svg && <SvgSection chartSvg={bdashQuery.chart_svg} />}
-        <ResultSection headerRow={headerRow} resultTsvRows={resultTsvRows} />
+        <ResultSection
+          headerRow={headerRow}
+          resultTsvRows={resultTsvRows}
+          isLoading={isLoadingResultTSV}
+        />
       </VStack>
 
       <Modal size="xl" isOpen={isOpenEditModal} onClose={onCloseEditModal}>

@@ -18,24 +18,30 @@ const s3 =
 
 const S3_BUCKET = env("S3_BUCKET")
 
-export const uploadResultTSV = (bdashQueryIdHash: string, tsvfilePath: string) => {
-  const fileContents = readFileSync(tsvfilePath)
+const uploadFile = (filePath: string, s3Prefix: string, contentType: string) => {
+  const fileContents = readFileSync(filePath)
 
   const params: S3.Types.PutObjectRequest = {
     Bucket: S3_BUCKET,
-    Key: `bdashQuery/${bdashQueryIdHash}/result.tsv`,
+    Key: s3Prefix,
     Body: fileContents,
     Metadata: {
-      "Content-Type": "text/csv",
+      "Content-Type": contentType,
     },
   }
   return s3.putObject(params).promise()
 }
 
-export const downloadResultTSV = (bdashQueryIdHash: string) => {
+const downloadFile = (s3Prefix: string) => {
   const params: S3.Types.GetObjectRequest = {
     Bucket: S3_BUCKET,
-    Key: `bdashQuery/${bdashQueryIdHash}/result.tsv`,
+    Key: s3Prefix,
   }
   return s3.getObject(params).promise()
 }
+
+export const uploadResultTSV = (bdashQueryIdHash: string, tsvfilePath: string) =>
+  uploadFile(tsvfilePath, `bdashQuery/${bdashQueryIdHash}/result.tsv`, "text/csv")
+
+export const downloadResultTSV = (bdashQueryIdHash: string) =>
+  downloadFile(`bdashQuery/${bdashQueryIdHash}/result.tsv`)
