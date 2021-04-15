@@ -281,7 +281,13 @@ const ResultSection = memo(
       <Box>
         <SectionHeader text="Result" />
         <Box bg="white" pl={10} pr={10} pt={10} pb={5} borderRadius="xl">
-          <Box borderColor="gray.300" borderWidth="1px" borderRadius="lg" overflow="hidden">
+          <Box
+            borderColor="gray.300"
+            borderWidth="1px"
+            borderRadius="lg"
+            overflowX="scroll"
+            overflowY="hidden"
+          >
             {isLoading ? (
               <Spinner color="teal" />
             ) : (
