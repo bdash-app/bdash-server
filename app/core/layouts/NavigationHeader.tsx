@@ -1,0 +1,40 @@
+import { useRouterQuery } from "@blitzjs/core"
+import { Image } from "blitz"
+import { Box, Flex, Heading, Spacer, Spinner, Link, HStack } from "@chakra-ui/react"
+import React, { Suspense } from "react"
+import { LoggedInUser } from "./LoggedInUser"
+import { SearchForm } from "./SearchForm"
+
+export const NavigationHeader: React.FC = () => {
+  const query = useRouterQuery()
+  return (
+    <Box bg="white">
+      <Flex
+        maxW="1100px"
+        marginBottom={6}
+        paddingTop={2}
+        paddingBottom={2}
+        paddingLeft={4}
+        paddingRight={4}
+        marginLeft="auto"
+        marginRight="auto"
+        alignItems="center"
+      >
+        <Link href="/" _hover={{ textDecoration: "none" }}>
+          <Heading as="h1" size="md">
+            <HStack>
+              <Image src="/logo.png" alt="" width={32} height={32} />
+              <Box>Bdash Server</Box>
+            </HStack>
+          </Heading>
+        </Link>
+        <Spacer minW={4} />
+        <SearchForm width={500} keyword={query["q"]?.toString()} />
+        <Spacer minW={4} />
+        <Suspense fallback={<Spinner color="teal" />}>
+          <LoggedInUser />
+        </Suspense>
+      </Flex>
+    </Box>
+  )
+}

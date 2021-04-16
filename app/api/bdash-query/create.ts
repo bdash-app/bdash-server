@@ -9,14 +9,14 @@ type BdashClientRequestBody = { description: string; files: { [key: string]: { c
 
 const postBdashQuery = async (req: BlitzApiRequest, res: BlitzApiResponse) => {
   if (req.method !== "POST") {
-    res.status(405)
+    res.status(405).end()
     return
   }
 
   const accessToken = req.headers["authorization"]?.split("token ")[1]
   const user = await db.user.findUnique({ where: { accessToken } })
   if (user === null) {
-    res.status(404)
+    res.status(404).end()
     return
   }
 
