@@ -77,7 +77,7 @@ const UserInfo = () => {
           Access Token: <Code colorScheme="blackAlpha">{currentUser?.accessToken}</Code>
         </Text>
         <Text>
-          GitHub Enterprise URL:{" "}
+          GitHub Enterprise URL:
           <Code colorScheme="blackAlpha">{`${window.location.protocol}//${window.location.host}/api/bdash-query`}</Code>
         </Text>
       </VStack>

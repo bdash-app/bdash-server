@@ -1,5 +1,5 @@
 import { useRouterQuery } from "@blitzjs/core"
-import { Image } from "blitz"
+import { Image, useRouter } from "blitz"
 import { Box, Flex, Heading, Spacer, Spinner, Link, HStack } from "@chakra-ui/react"
 import React, { Suspense } from "react"
 import { LoggedInUser } from "./LoggedInUser"
@@ -7,6 +7,7 @@ import { SearchForm } from "./SearchForm"
 
 export const NavigationHeader: React.FC = () => {
   const query = useRouterQuery()
+  const router = useRouter()
   return (
     <Box bg="white">
       <Flex
@@ -20,7 +21,12 @@ export const NavigationHeader: React.FC = () => {
         marginRight="auto"
         alignItems="center"
       >
-        <Link href="/" _hover={{ textDecoration: "none" }}>
+        <Link
+          onClick={() => {
+            router.push("/")
+          }}
+          _hover={{ textDecoration: "none" }}
+        >
           <Heading as="h1" size="md">
             <HStack>
               <Image src="/logo.png" alt="" width={32} height={32} />

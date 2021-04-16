@@ -1,4 +1,3 @@
-import { BdashQuery, User } from "db"
 import React from "react"
 import { UnorderedList, ListItem, HStack, Text, Avatar } from "@chakra-ui/react"
 import { Link } from "blitz"

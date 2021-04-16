@@ -1,5 +1,5 @@
 import React, { memo, Suspense, useCallback, useEffect, useMemo, useState } from "react"
-import { Head, useQuery, useParam, BlitzPage, Link, useMutation } from "blitz"
+import { Head, useQuery, useParam, BlitzPage, Link, useMutation, useRouter } from "blitz"
 import Layout from "app/core/layouts/Layout"
 import getBdashQuery from "app/bdash-queries/queries/getBdashQuery"
 import {
@@ -109,17 +109,24 @@ export const BdashQuery = () => {
     toast,
     updateBdashQueryMutation,
   ])
+  const router = useRouter()
   const onClickDelete = useCallback(async () => {
     if (window.confirm("Are you sure you want to delete this query?")) {
       try {
         await deleteBdashQueryMutation({ id: bdashQuery.id })
-        window.location.href = `/user/${bdashQuery.userId}`
+        router.push(`/user/${bdashQuery.userId}`)
+        toast({
+          title: "Query deleted.",
+          status: "success",
+          duration: 9000,
+          isClosable: true,
+        })
       } catch (error) {
         console.error(error)
         window.alert("Failed to delete query")
       }
     }
-  }, [bdashQuery.id, bdashQuery.userId, deleteBdashQueryMutation])
+  }, [bdashQuery.id, bdashQuery.userId, deleteBdashQueryMutation, router, toast])
   const onClickEditCancel = useCallback(() => {
     onCloseEditModal()
   }, [onCloseEditModal])
