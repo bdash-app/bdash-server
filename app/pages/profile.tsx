@@ -14,6 +14,7 @@ import {
   HStack,
   Heading,
   Spinner,
+  Input,
 } from "@chakra-ui/react"
 import updateUser from "app/users/mutations/updateUser"
 import { EditableControls } from "app/core/components/EditableControls"
@@ -73,15 +74,37 @@ const UserInfo = () => {
           Bdash client config
         </Heading>
         <Text>Set the following values to Bdash client config.</Text>
-        <Text>
-          Access Token: <Code colorScheme="blackAlpha">{currentUser?.accessToken}</Code>
-        </Text>
-        <Text>
-          GitHub Enterprise URL:
-          <Code colorScheme="blackAlpha">{`${window.location.protocol}//${window.location.host}/api/bdash-query`}</Code>
-        </Text>
+        <Heading as="h3" fontSize="lg">
+          Access Token
+        </Heading>
+        <CopyableText text={currentUser?.accessToken || ""} />
+        <Heading as="h3" fontSize="lg">
+          GitHub Enterprise URL
+        </Heading>
+        <CopyableText
+          text={`${window.location.protocol}//${window.location.host}/api/bdash-query`}
+        />
       </VStack>
     </VStack>
+  )
+}
+
+const CopyableText = ({ text }: { text: string }) => {
+  const select = (e: any) => {
+    e.currentTarget.select()
+  }
+  return (
+    <Input
+      value={text}
+      readOnly={true}
+      bg="gray.700"
+      color="white"
+      borderRadius={6}
+      size="sm"
+      width={500}
+      onFocus={select}
+      onClick={select}
+    />
   )
 }
 

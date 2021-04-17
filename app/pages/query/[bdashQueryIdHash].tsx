@@ -39,6 +39,7 @@ import { format } from "date-fns"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import updateBdashQuery from "app/bdash-queries/mutations/updateBdashQuery"
 import deleteBdashQuery from "app/bdash-queries/mutations/deleteBdashQuery"
+import { TextLinker } from "app/core/components/TextLinker"
 
 const MAX_DISPLAY_ROWS = 1000
 
@@ -180,7 +181,9 @@ export const BdashQuery = () => {
       <Box bg="white" pl={10} pr={10} pt={5} pb={5} mb={5} borderRadius="xl">
         {description ? (
           <Box fontSize="md">
-            <pre>{description}</pre>
+            <pre>
+              <TextLinker text={description} />
+            </pre>
           </Box>
         ) : (
           <Text fontSize="sm" color="gray.500">

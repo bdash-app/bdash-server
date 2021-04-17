@@ -63,6 +63,9 @@ export const theme = extendTheme({
       a: {
         color: "teal",
         textDecoration: "none",
+        _hover: {
+          textDecoration: "underline",
+        },
       },
     },
   },
