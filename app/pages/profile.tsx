@@ -6,7 +6,6 @@ import {
   VStack,
   Avatar,
   Text,
-  Code,
   Button,
   Editable,
   EditablePreview,
