@@ -29,6 +29,14 @@ Docker is required. 🐳
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+### Run production mode (NODE_ENV=production) on local machine
+
+Run an app container with the image built by [Dockerfile](https://github.com/morishin/bdash-server/blob/main/Dockerfile) for production.
+
+```sh
+docker-compose -f docker-compose-with-app-container.yml up --build
+```
+
 ## Tests
 
 ```
