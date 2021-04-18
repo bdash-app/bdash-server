@@ -14,6 +14,11 @@ const postBdashQuery = async (req: BlitzApiRequest, res: BlitzApiResponse) => {
   }
 
   const accessToken = req.headers["authorization"]?.split("token ")[1]
+  if (accessToken === undefined) {
+    res.status(401).end()
+    return
+  }
+
   const user = await db.user.findUnique({ where: { accessToken } })
   if (user === null) {
     res.status(404).end()
