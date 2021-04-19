@@ -60,7 +60,7 @@ const UserInfo = () => {
         </HStack>
       </Editable>
       {currentUser && (
-        <Link href="/user/[userId]" as={`/user/${currentUser.id}`}>
+        <Link href="/[userName]" as={`/${currentUser.name}`}>
           <a>
             <Button marginTop={2} colorScheme="teal">
               Queries

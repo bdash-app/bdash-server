@@ -115,7 +115,7 @@ export const BdashQuery = () => {
     if (window.confirm("Are you sure you want to delete this query?")) {
       try {
         await deleteBdashQueryMutation({ id: bdashQuery.id })
-        router.push(`/user/${bdashQuery.userId}`)
+        router.push(`/${bdashQuery.user.name}`)
         toast({
           title: "Query deleted.",
           status: "success",
@@ -127,7 +127,7 @@ export const BdashQuery = () => {
         window.alert("Failed to delete query")
       }
     }
-  }, [bdashQuery.id, bdashQuery.userId, deleteBdashQueryMutation, router, toast])
+  }, [bdashQuery.id, bdashQuery.user.name, deleteBdashQueryMutation, router, toast])
   const onClickEditCancel = useCallback(() => {
     onCloseEditModal()
   }, [onCloseEditModal])
@@ -164,7 +164,7 @@ export const BdashQuery = () => {
         )}
       </Heading>
       <HStack marginBottom={4}>
-        <Link href="/user/[userId]" as={`/user/${bdashQuery.user.id}`}>
+        <Link href="/[userName]" as={`/${bdashQuery.user.name}`}>
           <a>
             <HStack>
               <Text>by</Text>
