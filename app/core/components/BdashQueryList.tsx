@@ -22,7 +22,7 @@ export const BdashQueryList: React.FC<Props> = ({ queries }) => {
             {query.user && (
               <Text fontSize="sm" color="gray.500">
                 by
-                <Link href="/user/[userId]" as={`/user/${query.user.id}`}>
+                <Link href="/[userName]" as={`/${query.user.name}`}>
                   <a>
                     <Avatar size="xs" src={query.user.icon} marginLeft={1} marginRight={1} />
                     {query.user.name}
