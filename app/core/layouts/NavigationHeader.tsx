@@ -12,7 +12,6 @@ export const NavigationHeader: React.FC = () => {
     <Box bg="white">
       <Flex
         maxW="1100px"
-        marginBottom={6}
         paddingTop={2}
         paddingBottom={2}
         paddingLeft={4}

@@ -17,7 +17,7 @@ const Layout = ({ title, children }: LayoutProps) => {
       </Head>
 
       <NavigationHeader />
-      <Container maxW="1100px" alignContent="start" minH="100vh">
+      <Container maxW="1100px" alignContent="start" minH="100vh" pt={6} pb={6}>
         {children}
       </Container>
     </>

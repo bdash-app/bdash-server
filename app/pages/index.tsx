@@ -5,7 +5,7 @@ import { Box, Button, HStack, Heading, Spinner } from "@chakra-ui/react"
 import { BdashQueryList } from "../core/components/BdashQueryList"
 import getBdashQueries from "app/bdash-queries/queries/getBdashQueries"
 
-const ITEMS_PER_PAGE = 100
+const ITEMS_PER_PAGE = 25
 
 const Home = () => {
   const router = useRouter()
@@ -33,7 +33,7 @@ const Home = () => {
           queries={bdashQueries.map((query) => Object.assign(query, { user: query.user }))}
         />
         {hasMore && (
-          <HStack spacing={5}>
+          <HStack marginTop={5} spacing={5}>
             <Button colorScheme="teal" disabled={page === 0} onClick={goToPreviousPage}>
               Previous
             </Button>
