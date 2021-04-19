@@ -1,12 +1,11 @@
 import React, { Suspense, useCallback, useState } from "react"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
-import { Head, Link, useMutation } from "blitz"
+import { Head, useMutation } from "blitz"
 import Layout from "app/core/layouts/Layout"
 import {
   VStack,
   Avatar,
   Text,
-  Button,
   Editable,
   EditablePreview,
   EditableInput,
@@ -59,15 +58,6 @@ const UserInfo = () => {
           <EditableControls />
         </HStack>
       </Editable>
-      {currentUser && (
-        <Link href="/[userName]" as={`/${currentUser.name}`}>
-          <a>
-            <Button marginTop={2} colorScheme="teal">
-              Queries
-            </Button>
-          </a>
-        </Link>
-      )}
       <VStack align="flex-start">
         <Heading as="h2" fontSize="2xl" marginTop={3}>
           Bdash client config
