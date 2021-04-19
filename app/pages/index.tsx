@@ -19,6 +19,8 @@ const Home = () => {
   const goToPreviousPage = () => router.push({ query: { page: page - 1 } })
   const goToNextPage = () => router.push({ query: { page: page + 1 } })
 
+  const isPagerHidden = page === 0 && !hasMore
+
   return (
     <>
       <Head>
@@ -32,7 +34,7 @@ const Home = () => {
         <BdashQueryList
           queries={bdashQueries.map((query) => Object.assign(query, { user: query.user }))}
         />
-        {hasMore && (
+        {!isPagerHidden && (
           <HStack marginTop={5} spacing={5}>
             <Button colorScheme="teal" disabled={page === 0} onClick={goToPreviousPage}>
               Previous
