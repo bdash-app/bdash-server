@@ -320,7 +320,9 @@ const ResultSection = memo(
                   {resultTsvRows.slice(0, MAX_DISPLAY_ROWS).map((row) => (
                     <Tr key={row.join()}>
                       {row.map((column, i) => (
-                        <Td key={`${column}_${i}`}>{column}</Td>
+                        <Td key={`${column}_${i}`}>
+                          <TextLinker text={column} />
+                        </Td>
                       ))}
                     </Tr>
                   ))}
