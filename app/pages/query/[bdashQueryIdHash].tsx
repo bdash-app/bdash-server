@@ -40,6 +40,7 @@ import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import updateBdashQuery from "app/bdash-queries/mutations/updateBdashQuery"
 import deleteBdashQuery from "app/bdash-queries/mutations/deleteBdashQuery"
 import { TextLinker } from "app/core/components/TextLinker"
+import Papa from "papaparse"
 
 const MAX_DISPLAY_ROWS = 1000
 
@@ -140,9 +141,10 @@ export const BdashQuery = () => {
     setEditingDescription(description)
   }, [])
 
-  const resultTsvRows = useMemo(() => resultTSV.split("\n").map((row) => row.split("\t")), [
-    resultTSV,
-  ])
+  const resultTsvRows = useMemo(() => {
+    const { data } = Papa.parse(resultTSV, { delimiter: "\t" })
+    return data as string[][]
+  }, [resultTSV])
   const headerRow = useMemo(() => resultTsvRows.shift() || [], [resultTsvRows])
 
   return (
