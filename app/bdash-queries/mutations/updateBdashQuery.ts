@@ -6,6 +6,7 @@ const UpdateBdashQuery = z.object({
   id: z.number(),
   title: z.string().optional(),
   description: z.string().optional(),
+  query_sql: z.string().optional(),
 })
 
 export default resolver.pipe(

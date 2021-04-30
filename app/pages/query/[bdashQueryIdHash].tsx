@@ -1,5 +1,14 @@
 import React, { memo, Suspense, useCallback, useEffect, useMemo, useState } from "react"
-import { Head, useQuery, useParam, BlitzPage, Link, useMutation, useRouter } from "blitz"
+import {
+  Head,
+  useQuery,
+  useParam,
+  BlitzPage,
+  Link,
+  useMutation,
+  useRouter,
+  setQueryData,
+} from "blitz"
 import Layout from "app/core/layouts/Layout"
 import getBdashQuery from "app/bdash-queries/queries/getBdashQuery"
 import {
@@ -55,8 +64,10 @@ export const BdashQuery = () => {
   } = useDisclosure()
   const [title, setTitle] = useState(bdashQuery.title)
   const [description, setDescription] = useState(bdashQuery.description)
+  const [querySql, setQuerySql] = useState(bdashQuery.query_sql)
   const [editingTitle, setEditingTitle] = useState(bdashQuery.title)
   const [editingDescription, setEditingDescription] = useState(bdashQuery.description)
+  const [editingQuerySql, setEditingQuerySql] = useState(bdashQuery.query_sql)
   const [updateBdashQueryMutation] = useMutation(updateBdashQuery)
   const [deleteBdashQueryMutation] = useMutation(deleteBdashQuery)
   const toast = useToast()
@@ -88,9 +99,11 @@ export const BdashQuery = () => {
         id: bdashQuery.id,
         title: editingTitle,
         description: editingDescription,
+        query_sql: editingQuerySql,
       })
       setTitle(editingTitle)
       setDescription(editingDescription)
+      setQuerySql(editingQuerySql)
       onCloseEditModal()
       toast({
         title: "Query updated.",
@@ -106,6 +119,7 @@ export const BdashQuery = () => {
     bdashQuery.id,
     currentUser,
     editingDescription,
+    editingQuerySql,
     editingTitle,
     onCloseEditModal,
     toast,
@@ -133,12 +147,13 @@ export const BdashQuery = () => {
     onCloseEditModal()
   }, [onCloseEditModal])
   const onChangeEditTitle = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const title = e.target.value
-    setEditingTitle(title)
+    setEditingTitle(e.target.value)
   }, [])
   const onChangeEditDescription = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const description = e.target.value
-    setEditingDescription(description)
+    setEditingDescription(e.target.value)
+  }, [])
+  const onChangeEditQuerySql = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setEditingQuerySql(e.target.value)
   }, [])
 
   const resultTsvRows = useMemo(() => {
@@ -195,7 +210,7 @@ export const BdashQuery = () => {
       </Box>
 
       <VStack spacing={10} align="stretch">
-        <SqlSection querySql={bdashQuery.query_sql} />
+        <SqlSection querySql={querySql} />
         {bdashQuery.chart_svg && <SvgSection chartSvg={bdashQuery.chart_svg} />}
         <ResultSection
           headerRow={headerRow}
@@ -204,7 +219,7 @@ export const BdashQuery = () => {
         />
       </VStack>
 
-      <Modal size="xl" isOpen={isOpenEditModal} onClose={onCloseEditModal}>
+      <Modal size="4xl" isOpen={isOpenEditModal} onClose={onCloseEditModal}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Edit</ModalHeader>
@@ -229,6 +244,17 @@ export const BdashQuery = () => {
               placeholder="Description of this query"
               boxSizing="border-box"
               minHeight={150}
+              marginBottom={5}
+            />
+            <Heading size="md" marginBottom={2}>
+              SQL
+            </Heading>
+            <Textarea
+              value={editingQuerySql}
+              onChange={onChangeEditQuerySql}
+              placeholder="SELECT * FROM ..."
+              boxSizing="border-box"
+              minHeight={200}
             />
           </ModalBody>
 
