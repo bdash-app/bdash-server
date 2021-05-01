@@ -35,6 +35,12 @@ $ yarn dev
 
 Docker is required. 🐳
 
+Run db:migrate to setup database.
+
+```sh
+$ yarn db:migrate
+```
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ### Run production mode (NODE_ENV=production) on local machine
