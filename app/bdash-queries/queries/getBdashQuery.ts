@@ -10,7 +10,7 @@ const GetBdashQuery = z.object({
 export default resolver.pipe(
   resolver.zod(GetBdashQuery),
   resolver.authorize(),
-  async ({ idHash }) => {
+  async ({ idHash }, { session }) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
     const bdashQuery = await db.bdashQuery.findFirst({
       where: { id_hash: idHash },
@@ -19,6 +19,13 @@ export default resolver.pipe(
 
     if (!bdashQuery) throw new NotFoundError()
 
-    return bdashQuery
+    const fav = await db.favorite.findFirst({
+      where: {
+        bdashQueryId: bdashQuery.id,
+        userId: session.userId,
+      },
+    })
+
+    return { bdashQuery, favorite: fav !== null }
   }
 )
