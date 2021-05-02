@@ -16,6 +16,7 @@ const searchBdashQuery = async (req: BlitzApiRequest, res: BlitzApiResponse) => 
   >`SELECT * FROM BdashQuery WHERE title LIKE ${likeArg} OR description LIKE ${likeArg} OR query_sql LIKE ${likeArg};`
   const users = await db.user.findMany({
     where: { id: { in: searchResults.map((query) => query.userId) } },
+    select: { id: true, name: true, icon: true },
   })
   const bdashQueries = searchResults.map((bdashQuery) => {
     const foundUser = users.find((user) => user.id === bdashQuery.userId)

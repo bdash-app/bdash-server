@@ -15,7 +15,20 @@ export default resolver.pipe(
       take,
       count: () => db.bdashQuery.count({ where }),
       query: (paginateArgs) =>
-        db.bdashQuery.findMany({ ...paginateArgs, where, orderBy, include: { user: true } }),
+        db.bdashQuery.findMany({
+          ...paginateArgs,
+          where,
+          orderBy,
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                icon: true,
+              },
+            },
+          },
+        }),
     })
 
     return {
