@@ -1,14 +1,5 @@
 import React, { memo, Suspense, useCallback, useEffect, useMemo, useState } from "react"
-import {
-  Head,
-  useQuery,
-  useParam,
-  BlitzPage,
-  Link,
-  useMutation,
-  useRouter,
-  setQueryData,
-} from "blitz"
+import { Head, useQuery, useParam, BlitzPage, Link, useMutation, useRouter } from "blitz"
 import Layout from "app/core/layouts/Layout"
 import getBdashQuery from "app/bdash-queries/queries/getBdashQuery"
 import {
@@ -41,7 +32,7 @@ import {
   useToast,
   Spinner,
 } from "@chakra-ui/react"
-import { ChevronDownIcon, ChevronUpIcon, EditIcon } from "@chakra-ui/icons"
+import { ChevronDownIcon, ChevronUpIcon, EditIcon, StarIcon } from "@chakra-ui/icons"
 import SyntaxHighlighter from "react-syntax-highlighter"
 import { a11yLight } from "react-syntax-highlighter/dist/cjs/styles/hljs"
 import { format } from "date-fns"
@@ -50,13 +41,16 @@ import updateBdashQuery from "app/bdash-queries/mutations/updateBdashQuery"
 import deleteBdashQuery from "app/bdash-queries/mutations/deleteBdashQuery"
 import { TextLinker } from "app/core/components/TextLinker"
 import Papa from "papaparse"
+import createFavorite from "app/favorites/mutations/createFavorite"
+import deleteFavorite from "app/favorites/mutations/deleteFavorite"
 
 const MAX_DISPLAY_ROWS = 1000
 
 export const BdashQuery = () => {
   const currentUser = useCurrentUser()
   const bdashQueryIdHash = useParam("bdashQueryIdHash", "string")
-  const [bdashQuery] = useQuery(getBdashQuery, { idHash: bdashQueryIdHash })
+  const [bdashQueryResult] = useQuery(getBdashQuery, { idHash: bdashQueryIdHash })
+  const { bdashQuery, favorite: currentFav } = bdashQueryResult
   const {
     isOpen: isOpenEditModal,
     onOpen: onOpenEditModal,
@@ -70,6 +64,8 @@ export const BdashQuery = () => {
   const [editingQuerySql, setEditingQuerySql] = useState(bdashQuery.query_sql)
   const [updateBdashQueryMutation] = useMutation(updateBdashQuery)
   const [deleteBdashQueryMutation] = useMutation(deleteBdashQuery)
+  const [createFavoriteMutation] = useMutation(createFavorite)
+  const [deleteFavoriteMutation] = useMutation(deleteFavorite)
   const toast = useToast()
   const [isLoadingResultTSV, setIsLoadingResultTSV] = useState(false)
   const [resultTSV, setResultTSV] = useState("")
@@ -162,6 +158,19 @@ export const BdashQuery = () => {
   }, [resultTSV])
   const headerRow = useMemo(() => resultTsvRows.shift() || [], [resultTsvRows])
 
+  const [fav, setFav] = useState<boolean>(currentFav)
+  const handleClickFav = useCallback(() => {
+    if (bdashQueryIdHash === undefined) return
+
+    if (fav === true) {
+      setFav(false)
+      deleteFavoriteMutation({ bdashQueryIdHash })
+    } else {
+      setFav(true)
+      createFavoriteMutation({ bdashQueryIdHash })
+    }
+  }, [bdashQueryIdHash, createFavoriteMutation, deleteFavoriteMutation, fav])
+
   return (
     <>
       <Head>
@@ -169,16 +178,23 @@ export const BdashQuery = () => {
       </Head>
 
       <Heading as="h2" size="lg" marginBottom={2}>
-        {title}
-        {bdashQuery.userId === currentUser?.id && (
+        <HStack spacing={1}>
+          <Text marginRight={2}>{title}</Text>
+          {bdashQuery.userId === currentUser?.id && (
+            <IconButton
+              onClick={onOpenEditModal}
+              fontSize="2xl"
+              aria-label="edit"
+              icon={<EditIcon />}
+            />
+          )}
           <IconButton
-            onClick={onOpenEditModal}
-            marginLeft={3}
+            onClick={handleClickFav}
             fontSize="2xl"
-            aria-label="edit"
-            icon={<EditIcon />}
+            aria-label="favorite"
+            icon={<StarIcon color={fav ? "yellow.500" : "gray.400"} />}
           />
-        )}
+        </HStack>
       </Heading>
       <HStack marginBottom={4}>
         <Link href="/[userName]" as={`/${bdashQuery.user.name}`}>
