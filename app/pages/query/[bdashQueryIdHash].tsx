@@ -49,7 +49,11 @@ const MAX_DISPLAY_ROWS = 1000
 export const BdashQuery = () => {
   const currentUser = useCurrentUser()
   const bdashQueryIdHash = useParam("bdashQueryIdHash", "string")
-  const [bdashQueryResult] = useQuery(getBdashQuery, { idHash: bdashQueryIdHash })
+  const [bdashQueryResult] = useQuery(
+    getBdashQuery,
+    { idHash: bdashQueryIdHash },
+    { cacheTime: 1000 }
+  )
   const { bdashQuery, favorite: currentFav } = bdashQueryResult
   const {
     isOpen: isOpenEditModal,
