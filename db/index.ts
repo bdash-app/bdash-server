@@ -4,4 +4,6 @@ import { PrismaClient } from "@prisma/client"
 const EnhancedPrisma = enhancePrisma(PrismaClient)
 
 export * from "@prisma/client"
-export default new EnhancedPrisma()
+export default new EnhancedPrisma({
+  log: ["query", "warn", "error"],
+})
