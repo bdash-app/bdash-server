@@ -10,13 +10,6 @@ services:
       - MYSQL_DATABASE=bdash_server_dev
     ports:
       - "3307:3306"
-  db_test:
-    image: mysql:5.7
-    environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=bdash_server_dev
-    ports:
-      - "3308:3306"
   minio:
     image: minio/minio:RELEASE.2021-04-27T23-46-03Z.release.0033eb96
     ports:
