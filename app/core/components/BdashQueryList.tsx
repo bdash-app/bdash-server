@@ -2,10 +2,10 @@ import React from "react"
 import { UnorderedList, ListItem, HStack, Text, Avatar } from "@chakra-ui/react"
 import { Link } from "blitz"
 import { format } from "date-fns"
-import { SearchBdashQueryResponse } from "app/api/bdash-query/search"
+import type { BdashQuery, User } from "db"
 
 type Props = {
-  queries: SearchBdashQueryResponse
+  queries: (BdashQuery & { user?: Pick<User, "name" | "icon"> })[]
 }
 
 export const BdashQueryList: React.FC<Props> = ({ queries }) => {

@@ -1,4 +1,4 @@
-import { SettingsIcon } from "@chakra-ui/icons"
+import { SettingsIcon, StarIcon } from "@chakra-ui/icons"
 import { HStack, Avatar, Text } from "@chakra-ui/react"
 import { Link } from "blitz"
 import React from "react"
@@ -14,6 +14,11 @@ export const LoggedInUser = () => {
             <Avatar size="sm" src={currentUser?.icon} />
             <Text>{currentUser?.name || "Guest"}</Text>
           </HStack>
+        </a>
+      </Link>
+      <Link href="/favorites">
+        <a>
+          <StarIcon />
         </a>
       </Link>
       <Link href="/settings">
