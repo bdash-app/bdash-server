@@ -68,7 +68,7 @@ const UserInfo = () => {
         </Heading>
         <CopyableText text={currentUser?.accessToken || ""} />
         <Heading as="h3" fontSize="lg">
-          GitHub Enterprise URL
+          Bdash Server URL
         </Heading>
         <CopyableText
           text={`${window.location.protocol}//${window.location.host}/api/bdash-query`}
