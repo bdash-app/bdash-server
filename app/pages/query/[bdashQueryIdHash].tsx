@@ -43,6 +43,7 @@ import { TextLinker } from "app/core/components/TextLinker"
 import Papa from "papaparse"
 import createFavorite from "app/favorites/mutations/createFavorite"
 import deleteFavorite from "app/favorites/mutations/deleteFavorite"
+import { Chart } from "app/core/components/Chart"
 
 const MAX_DISPLAY_ROWS = 1000
 
@@ -402,9 +403,7 @@ const SqlSection = memo(({ querySql }: { querySql: string }) => (
 const SvgSection = memo(({ chartSvg }: { chartSvg: string }) => (
   <Box>
     <SectionHeader text="Chart" />
-    <Box bg="white" pl={10} pr={10} pt={5} pb={5} borderRadius="xl">
-      <div dangerouslySetInnerHTML={{ __html: chartSvg }} />
-    </Box>
+    <Chart chartSvg={chartSvg} />
   </Box>
 ))
 
