@@ -37,6 +37,7 @@ const postBdashQuery = async (req: BlitzApiRequest, res: BlitzApiResponse) => {
     title: body.description,
     description: "",
     query_sql: "",
+    data_source_info: "",
     metadata_md: "",
     chart_svg: null,
   }
@@ -54,8 +55,8 @@ const postBdashQuery = async (req: BlitzApiRequest, res: BlitzApiResponse) => {
         fs.writeFileSync(tmpFile.name, value.content)
         resultTSVFilePath = tmpFile.name
         break
-      case "md":
-        data.metadata_md = value.content
+      case "json":
+        data.data_source_info = normalizeDataSourceInfo(value.content)
         break
       case "svg":
         data.chart_svg = value.content
@@ -75,6 +76,24 @@ const postBdashQuery = async (req: BlitzApiRequest, res: BlitzApiResponse) => {
   res.statusCode = 201
   res.setHeader("Content-Type", "application/json")
   res.end(JSON.stringify({ html_url: `${process.env.WEB_HOST}/query/${bdashQuery.id_hash}` }))
+}
+
+function normalizeDataSourceInfo(json: string): string | null {
+  let data
+  try {
+    data = JSON.parse(json)
+  } catch {
+    return null
+  }
+
+  if (data === null) return null
+  if (typeof data !== "object") return null
+
+  Object.keys(data).forEach((key) => {
+    data[key] = data[key] === null ? "" : String(data[key])
+  })
+
+  return JSON.stringify(data)
 }
 
 export default postBdashQuery
