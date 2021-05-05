@@ -74,6 +74,7 @@ export const BdashQuery = () => {
   const toast = useToast()
   const [isLoadingResultTSV, setIsLoadingResultTSV] = useState(false)
   const [resultTSV, setResultTSV] = useState("")
+  const dataSourceInfo = parseDataSourceInfo(bdashQuery.data_source_info)
   useEffect(() => {
     const f = async () => {
       setIsLoadingResultTSV(true)
@@ -238,6 +239,7 @@ export const BdashQuery = () => {
           resultTsvRows={resultTsvRows}
           isLoading={isLoadingResultTSV}
         />
+        {dataSourceInfo && <DataSourceInfoSection dataSourceInfo={dataSourceInfo} />}
       </VStack>
 
       <Modal size="4xl" isOpen={isOpenEditModal} onClose={onCloseEditModal}>
@@ -407,12 +409,44 @@ const SvgSection = memo(({ chartSvg }: { chartSvg: string }) => (
   </Box>
 ))
 
+const DataSourceInfoSection = memo(
+  ({ dataSourceInfo }: { dataSourceInfo: Record<string, string> }) => {
+    return (
+      <Box>
+        <SectionHeader text="Data Source" />
+        <Box bg="white" pl={10} pr={10} pt={10} pb={5} borderRadius="xl">
+          <Table>
+            {Object.keys(dataSourceInfo).map((key) => {
+              return (
+                <Tr key={key}>
+                  <Th>{key}</Th>
+                  <Td>{dataSourceInfo[key]}</Td>
+                </Tr>
+              )
+            })}
+          </Table>
+        </Box>
+      </Box>
+    )
+  }
+)
+
 const ShowBdashQueryPage: BlitzPage = () => {
   return (
     <Suspense fallback={<Spinner color="teal" />}>
       <BdashQuery />
     </Suspense>
   )
+}
+
+function parseDataSourceInfo(jsonString: string | null): Record<string, string> | null {
+  if (jsonString === null) return null
+
+  try {
+    return JSON.parse(jsonString)
+  } catch {
+    return null
+  }
 }
 
 ShowBdashQueryPage.authenticate = true
