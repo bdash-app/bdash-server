@@ -17,9 +17,6 @@ export default resolver.pipe(
     if (query === null) {
       throw new NotFoundError()
     }
-    if (session.userId !== query.userId) {
-      throw new AuthorizationError()
-    }
     const data: Prisma.FavoriteCreateArgs["data"] = {
       bdashQueryId: query.id,
       userId: session.userId,

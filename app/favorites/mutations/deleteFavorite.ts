@@ -17,9 +17,6 @@ export default resolver.pipe(
     if (query === null) {
       throw new NotFoundError()
     }
-    if (session.userId !== query.userId) {
-      throw new AuthorizationError()
-    }
     const fav = await db.favorite.findFirst({
       where: {
         bdashQueryId: query.id,
