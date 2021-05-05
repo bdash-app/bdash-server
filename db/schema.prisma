@@ -78,7 +78,6 @@ model BdashQuery {
   title            String
   description      String     @db.Text
   query_sql        String     @db.Text
-  metadata_md      String     @db.VarChar(512)
   data_source_info String?    @db.Text
   chart_svg        String?    @db.MediumText
   Favorite         Favorite[]
