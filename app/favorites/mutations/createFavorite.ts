@@ -1,4 +1,4 @@
-import { AuthorizationError, NotFoundError, resolver } from "blitz"
+import { NotFoundError, resolver } from "blitz"
 import db, { Prisma } from "db"
 import * as z from "zod"
 
