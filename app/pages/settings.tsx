@@ -70,9 +70,7 @@ const UserInfo = () => {
         <Heading as="h3" fontSize="lg">
           Bdash Server URL
         </Heading>
-        <CopyableText
-          text={`${window.location.protocol}//${window.location.host}/api/bdash-query`}
-        />
+        <CopyableText text={`${window.location.protocol}//${window.location.host}/`} />
       </VStack>
     </VStack>
   )
