@@ -159,7 +159,7 @@ export const BdashQuery = () => {
   }, [])
 
   const resultTsvRows = useMemo(() => {
-    const { data } = Papa.parse(resultTSV, { delimiter: "\t" })
+    const { data } = Papa.parse(resultTSV.trim(), { delimiter: "\t" })
     return data as string[][]
   }, [resultTSV])
   const headerRow = useMemo(() => resultTsvRows.shift() || [], [resultTsvRows])
