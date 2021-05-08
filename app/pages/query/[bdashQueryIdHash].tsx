@@ -220,9 +220,7 @@ export const BdashQuery = () => {
       <Box bg="white" pl={10} pr={10} pt={5} pb={5} mb={5} borderRadius="xl">
         {description ? (
           <Box fontSize="md">
-            <pre>
-              <TextLinker text={description} />
-            </pre>
+            <TextLinker text={description} />
           </Box>
         ) : (
           <Text fontSize="sm" color="gray.500">
