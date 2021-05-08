@@ -1,7 +1,7 @@
 import { Box } from "@chakra-ui/react"
 import SyntaxHighlighter from "react-syntax-highlighter"
 import { a11yLight } from "react-syntax-highlighter/dist/cjs/styles/hljs"
-import styles from "./sqlCodeBlock.module.css"
+import styles from "./SqlCodeBlock.module.css"
 
 export const SqlCodeBlock = ({ sql }: { sql: string }) => {
   return (
