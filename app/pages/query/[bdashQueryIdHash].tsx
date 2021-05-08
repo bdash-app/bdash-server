@@ -32,8 +32,6 @@ import {
   useToast,
 } from "@chakra-ui/react"
 import { ChevronDownIcon, ChevronUpIcon, EditIcon, StarIcon } from "@chakra-ui/icons"
-import SyntaxHighlighter from "react-syntax-highlighter"
-import { a11yLight } from "react-syntax-highlighter/dist/cjs/styles/hljs"
 import { format } from "date-fns"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import updateBdashQuery from "app/bdash-queries/mutations/updateBdashQuery"
@@ -45,6 +43,7 @@ import deleteFavorite from "app/favorites/mutations/deleteFavorite"
 import { Chart } from "app/core/components/Chart"
 import { ContentBox } from "app/core/components/ContentBox"
 import { LoadingMain } from "app/core/components/LoadingMain"
+import { SqlCodeBlock } from "app/core/components/SqlCodeBlock"
 
 const MAX_DISPLAY_ROWS = 1000
 
@@ -390,22 +389,7 @@ const SqlSection = memo(({ querySql }: { querySql: string }) => (
   <Box>
     <SectionHeader text="SQL" />
     <ContentBox>
-      <Box
-        borderColor="gray.300"
-        borderWidth="1px"
-        overflow="hidden"
-        marginTop={{ base: 0, md: 4 }}
-        marginBottom={{ base: 0, md: 4 }}
-        fontSize="sm"
-      >
-        <SyntaxHighlighter
-          language="sql"
-          style={a11yLight}
-          customStyle={{ backgroundColor: "white", wordBreak: "initial" }}
-        >
-          {querySql}
-        </SyntaxHighlighter>
-      </Box>
+      <SqlCodeBlock sql={querySql} />
     </ContentBox>
   </Box>
 ))
