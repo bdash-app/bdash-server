@@ -242,7 +242,7 @@ export const BdashQuery = () => {
 
       <Modal size="4xl" isOpen={isOpenEditModal} onClose={onCloseEditModal}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent paddingBottom={10}>
           <ModalHeader>Edit</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
