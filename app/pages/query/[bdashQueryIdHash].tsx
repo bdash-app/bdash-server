@@ -359,7 +359,9 @@ const ResultSection = memo(
                 <Thead>
                   <Tr>
                     {headerRow?.map((columnName) => (
-                      <Th key={columnName}>{columnName}</Th>
+                      <Th textTransform="none" key={columnName}>
+                        {columnName}
+                      </Th>
                     ))}
                   </Tr>
                 </Thead>
