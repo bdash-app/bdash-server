@@ -2,8 +2,8 @@ import React, { Suspense } from "react"
 import { useQuery, useParam, BlitzPage } from "blitz"
 import Layout from "app/core/layouts/Layout"
 import getUserById from "app/users/queries/getUserById"
-import { Spinner } from "@chakra-ui/react"
 import { UserPageContainer } from "app/core/components/UserPageContainer"
+import { LoadingMain } from "app/core/components/LoadingMain"
 
 const User = () => {
   const id = useParam("userId", "number")
@@ -14,7 +14,7 @@ const User = () => {
 
 const ShowUserPage: BlitzPage = () => {
   return (
-    <Suspense fallback={<Spinner color="teal" />}>
+    <Suspense fallback={<LoadingMain />}>
       <User />
     </Suspense>
   )

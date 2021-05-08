@@ -1,5 +1,5 @@
 import React from "react"
-import { UnorderedList, ListItem, Text, Avatar, Box } from "@chakra-ui/react"
+import { UnorderedList, ListItem, Text, Avatar, Box, Stack, HStack } from "@chakra-ui/react"
 import { Link } from "blitz"
 import { format } from "date-fns"
 import type { BdashQuery, User } from "db"
@@ -21,27 +21,29 @@ export const BdashQueryList: React.FC<Props> = ({ queries }) => {
           borderStyle={{ base: "solid", md: "none" }}
           borderBottomWidth={1}
         >
-          <Box fontSize="xl" display="inline-block" marginRight={2} wordBreak="break-word">
-            <Link href="/query/[bdashQueryIdHash]" as={`/query/${query.id_hash}`}>
-              <a>{query.title}</a>
-            </Link>
-          </Box>
-          <Box whiteSpace="nowrap" display="inline-block">
-            {query.user && (
-              <Text fontSize="sm" color="gray.500" display="inline-block">
-                by
-                <Link href="/[userName]" as={`/${query.user.name}`}>
-                  <a>
-                    <Avatar size="xs" src={query.user.icon} marginLeft={1} marginRight={1} />
-                    {query.user.name}
-                  </a>
-                </Link>
+          <Stack direction={{ base: "column", md: "row" }}>
+            <Box fontSize="xl" marginRight={2}>
+              <Link href="/query/[bdashQueryIdHash]" as={`/query/${query.id_hash}`}>
+                <a>{query.title}</a>
+              </Link>
+            </Box>
+            <HStack whiteSpace={{ base: "initial", md: "nowrap" }}>
+              {query.user && (
+                <Text fontSize="sm" color="gray.500">
+                  by
+                  <Link href="/[userName]" as={`/${query.user.name}`}>
+                    <a>
+                      <Avatar size="xs" src={query.user.icon} marginLeft={1} marginRight={1} />
+                      {query.user.name}
+                    </a>
+                  </Link>
+                </Text>
+              )}
+              <Text fontSize="sm" color="gray.500">
+                {format(query.createdAt, "(yyyy-MM-dd)")}
               </Text>
-            )}
-            <Text fontSize="sm" color="gray.500" display="inline-block">
-              {format(query.createdAt, "(yyyy-MM-dd)")}
-            </Text>
-          </Box>
+            </HStack>
+          </Stack>
         </ListItem>
       ))}
     </UnorderedList>

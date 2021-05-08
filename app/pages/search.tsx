@@ -1,9 +1,11 @@
 import React, { Suspense, useEffect, useState } from "react"
 import { Head, BlitzPage, useRouterQuery } from "blitz"
 import Layout from "app/core/layouts/Layout"
-import { Box, Heading, Spinner, useToast } from "@chakra-ui/react"
+import { Heading, useToast } from "@chakra-ui/react"
 import { BdashQueryList } from "../core/components/BdashQueryList"
 import { SearchBdashQueryResponse } from "app/api/bdash-query/search"
+import { ContentBox } from "app/core/components/ContentBox"
+import { LoadingMain } from "app/core/components/LoadingMain"
 
 export const SearchResult = () => {
   const query = useRouterQuery()
@@ -51,19 +53,19 @@ export const SearchResult = () => {
         <title>{`Search - ${keyword} | Bdash Server`}</title>
       </Head>
 
-      <Box bg="white" pl={10} pr={10} pt={5} pb={5} borderRadius="xl">
+      <ContentBox>
         <Heading as="h2" size="lg" marginBottom={4}>
           {`${bdashQueries.length} results for "${keyword}"`}
         </Heading>
-        {isLoading ? <Spinner color="teal" /> : <BdashQueryList queries={bdashQueries} />}
-      </Box>
+        {isLoading ? <LoadingMain /> : <BdashQueryList queries={bdashQueries} />}
+      </ContentBox>
     </>
   )
 }
 
 const SearchResultPage: BlitzPage = () => {
   return (
-    <Suspense fallback={<Spinner color="teal" />}>
+    <Suspense fallback={<LoadingMain />}>
       <SearchResult />
     </Suspense>
   )

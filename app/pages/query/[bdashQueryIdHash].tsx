@@ -30,7 +30,6 @@ import {
   Textarea,
   Input,
   useToast,
-  Spinner,
 } from "@chakra-ui/react"
 import { ChevronDownIcon, ChevronUpIcon, EditIcon, StarIcon } from "@chakra-ui/icons"
 import SyntaxHighlighter from "react-syntax-highlighter"
@@ -44,6 +43,8 @@ import Papa from "papaparse"
 import createFavorite from "app/favorites/mutations/createFavorite"
 import deleteFavorite from "app/favorites/mutations/deleteFavorite"
 import { Chart } from "app/core/components/Chart"
+import { ContentBox } from "app/core/components/ContentBox"
+import { LoadingMain } from "app/core/components/LoadingMain"
 
 const MAX_DISPLAY_ROWS = 1000
 
@@ -217,7 +218,7 @@ export const BdashQuery = () => {
         </Text>
       </HStack>
 
-      <Box bg="white" pl={10} pr={10} pt={5} pb={5} mb={5} borderRadius="xl">
+      <ContentBox mb={5}>
         {description ? (
           <Box fontSize="md">
             <TextLinker text={description} />
@@ -227,7 +228,7 @@ export const BdashQuery = () => {
             No description
           </Text>
         )}
-      </Box>
+      </ContentBox>
 
       <VStack spacing={10} align="stretch">
         <SqlSection querySql={querySql} />
@@ -339,7 +340,7 @@ const ResultSection = memo(
     return (
       <Box>
         <SectionHeader text="Result" />
-        <Box bg="white" pl={10} pr={10} pt={10} pb={5} borderRadius="xl">
+        <ContentBox>
           <Box
             borderColor="gray.300"
             borderWidth="1px"
@@ -348,7 +349,7 @@ const ResultSection = memo(
             overflowY="hidden"
           >
             {isLoading ? (
-              <Spinner color="teal" />
+              <LoadingMain />
             ) : (
               <Table variant="striped" size="sm" colorScheme="blackAlpha">
                 <TableCaption placement="top">
@@ -379,7 +380,7 @@ const ResultSection = memo(
               </Table>
             )}
           </Box>
-        </Box>
+        </ContentBox>
       </Box>
     )
   }
@@ -388,17 +389,24 @@ const ResultSection = memo(
 const SqlSection = memo(({ querySql }: { querySql: string }) => (
   <Box>
     <SectionHeader text="SQL" />
-    <Box bg="white" pl={10} pr={10} pt={5} pb={10} borderRadius="xl">
-      <Box borderColor="gray.300" borderWidth="1px" overflow="hidden" marginTop={4}>
+    <ContentBox>
+      <Box
+        borderColor="gray.300"
+        borderWidth="1px"
+        overflow="hidden"
+        marginTop={{ base: 0, md: 4 }}
+        marginBottom={{ base: 0, md: 4 }}
+        fontSize="sm"
+      >
         <SyntaxHighlighter
           language="sql"
           style={a11yLight}
-          customStyle={{ backgroundColor: "white" }}
+          customStyle={{ backgroundColor: "white", wordBreak: "initial" }}
         >
           {querySql}
         </SyntaxHighlighter>
       </Box>
-    </Box>
+    </ContentBox>
   </Box>
 ))
 
@@ -414,7 +422,7 @@ const DataSourceInfoSection = memo(
     return (
       <Box>
         <SectionHeader text="Data Source" />
-        <Box bg="white" pl={10} pr={10} pt={10} pb={5} borderRadius="xl">
+        <ContentBox>
           <Table>
             {Object.keys(dataSourceInfo).map((key) => {
               return (
@@ -425,7 +433,7 @@ const DataSourceInfoSection = memo(
               )
             })}
           </Table>
-        </Box>
+        </ContentBox>
       </Box>
     )
   }
@@ -433,7 +441,7 @@ const DataSourceInfoSection = memo(
 
 const ShowBdashQueryPage: BlitzPage = () => {
   return (
-    <Suspense fallback={<Spinner color="teal" />}>
+    <Suspense fallback={<LoadingMain />}>
       <BdashQuery />
     </Suspense>
   )

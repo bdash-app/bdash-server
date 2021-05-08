@@ -11,11 +11,11 @@ import {
   EditableInput,
   HStack,
   Heading,
-  Spinner,
   Input,
 } from "@chakra-ui/react"
 import updateUser from "app/users/mutations/updateUser"
 import { EditableControls } from "app/core/components/EditableControls"
+import { LoadingMain } from "app/core/components/LoadingMain"
 
 const UserInfo = () => {
   const currentUser = useCurrentUser()
@@ -101,7 +101,7 @@ const ProfilePage = () => {
       <Head>
         <title>{`Profile | Bdash Server`}</title>
       </Head>
-      <Suspense fallback={<Spinner color="teal" />}>
+      <Suspense fallback={<LoadingMain />}>
         <UserInfo />
       </Suspense>
     </>

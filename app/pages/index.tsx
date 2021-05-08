@@ -1,8 +1,10 @@
 import { Suspense } from "react"
 import { Head, BlitzPage, usePaginatedQuery, useRouter } from "blitz"
 import Layout from "app/core/layouts/Layout"
-import { Box, Button, HStack, Heading, Spinner } from "@chakra-ui/react"
+import { Button, HStack, Heading } from "@chakra-ui/react"
 import { BdashQueryList } from "../core/components/BdashQueryList"
+import { LoadingMain } from "../core/components/LoadingMain"
+import { ContentBox } from "../core/components/ContentBox"
 import getBdashQueries from "app/bdash-queries/queries/getBdashQueries"
 
 const ITEMS_PER_PAGE = 25
@@ -27,7 +29,7 @@ const Home = () => {
         <title>Bdash Server</title>
       </Head>
 
-      <Box bg="white" pl={10} pr={10} pt={5} pb={5} borderRadius="xl">
+      <ContentBox>
         <Heading as="h2" size="lg" marginBottom={4}>
           All Queries
         </Heading>
@@ -44,14 +46,14 @@ const Home = () => {
             </Button>
           </HStack>
         )}
-      </Box>
+      </ContentBox>
     </>
   )
 }
 
 const ShowHomePage: BlitzPage = () => {
   return (
-    <Suspense fallback={<Spinner color="teal" />}>
+    <Suspense fallback={<LoadingMain />}>
       <Home />
     </Suspense>
   )
