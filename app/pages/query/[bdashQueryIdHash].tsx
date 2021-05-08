@@ -183,25 +183,25 @@ export const BdashQuery = () => {
         <title>{title} | Bdash Server</title>
       </Head>
 
-      <Heading as="h2" size="lg" marginBottom={2}>
-        <HStack spacing={1}>
-          <Text marginRight={2}>{title}</Text>
-          {bdashQuery.userId === currentUser?.id && (
-            <IconButton
-              onClick={onOpenEditModal}
-              fontSize="2xl"
-              aria-label="edit"
-              icon={<EditIcon />}
-            />
-          )}
+      <HStack spacing={1}>
+        <Heading as="h2" size="lg" marginBottom={2} marginRight={2} minWidth="0">
+          {title}
+        </Heading>
+        {bdashQuery.userId === currentUser?.id && (
           <IconButton
-            onClick={handleClickFav}
+            onClick={onOpenEditModal}
             fontSize="2xl"
-            aria-label="favorite"
-            icon={<StarIcon color={fav ? "yellow.500" : "gray.400"} />}
+            aria-label="edit"
+            icon={<EditIcon />}
           />
-        </HStack>
-      </Heading>
+        )}
+        <IconButton
+          onClick={handleClickFav}
+          fontSize="2xl"
+          aria-label="favorite"
+          icon={<StarIcon color={fav ? "yellow.500" : "gray.400"} />}
+        />
+      </HStack>
       <HStack marginBottom={4}>
         <Link href="/[userName]" as={`/${bdashQuery.user.name}`}>
           <a>

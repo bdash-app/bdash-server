@@ -88,7 +88,7 @@ const CopyableText = ({ text }: { text: string }) => {
       color="white"
       borderRadius={6}
       size="sm"
-      width={500}
+      width={{ base: 300, md: 500 }}
       onFocus={select}
       onClick={select}
     />

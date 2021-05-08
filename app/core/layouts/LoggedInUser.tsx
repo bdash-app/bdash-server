@@ -24,7 +24,7 @@ export const LoggedInUser = () => {
       <MenuButton as={Button} background="transparent" rightIcon={<ChevronDownIcon />}>
         <HStack>
           <Avatar size="sm" src={currentUser.icon} />
-          <Text>{currentUser.name}</Text>
+          <Text display={{ base: "none", md: "inline" }}>{currentUser.name}</Text>
         </HStack>
       </MenuButton>
       <MenuList>

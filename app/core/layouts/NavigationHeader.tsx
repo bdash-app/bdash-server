@@ -1,6 +1,6 @@
 import { useRouterQuery } from "@blitzjs/core"
-import { Image, useRouter } from "blitz"
-import { Box, Flex, Heading, Spacer, Spinner, Link, HStack, Text } from "@chakra-ui/react"
+import { useRouter } from "blitz"
+import { Box, Flex, Heading, Spacer, Spinner, Link, HStack, Text, Image } from "@chakra-ui/react"
 import React, { Suspense } from "react"
 import { LoggedInUser } from "./LoggedInUser"
 import { SearchForm } from "./SearchForm"
@@ -28,8 +28,8 @@ export const NavigationHeader: React.FC = () => {
         >
           <Heading as="h1" size="md">
             <HStack>
-              <Image src="/logo.png" alt="" width={32} height={32} />
-              <Text>Bdash Server</Text>
+              <Image src="/logo.png" alt="" width={8} height={8} maxWidth="none" />
+              <Text display={{ base: "none", md: "inline" }}>Bdash Server</Text>
             </HStack>
           </Heading>
         </Link>
