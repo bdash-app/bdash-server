@@ -44,6 +44,7 @@ import { Chart } from "app/core/components/Chart"
 import { ContentBox } from "app/core/components/ContentBox"
 import { LoadingMain } from "app/core/components/LoadingMain"
 import { SqlCodeBlock } from "app/core/components/SqlCodeBlock"
+import { QueryResult } from "app/core/lib/QueryResult"
 
 const MAX_DISPLAY_ROWS = 1000
 
@@ -158,11 +159,21 @@ export const BdashQuery = () => {
     setEditingQuerySql(e.target.value)
   }, [])
 
-  const resultTsvRows = useMemo(() => {
+  const queryResult = useMemo(() => {
+    if (bdashQuery.result !== null) {
+      try {
+        return JSON.parse(bdashQuery.result) as QueryResult
+      } catch (err) {
+        console.warn(err)
+      }
+    }
     const { data } = Papa.parse(resultTSV.trim(), { delimiter: "\t" })
-    return data as string[][]
-  }, [resultTSV])
-  const headerRow = useMemo(() => resultTsvRows.shift() || [], [resultTsvRows])
+    const columns = data.shift() || []
+    return {
+      columns,
+      rows: data,
+    } as QueryResult
+  }, [bdashQuery.result, resultTSV])
 
   const [fav, setFav] = useState<boolean>(currentFav)
   const handleClickFav = useCallback(() => {
@@ -232,11 +243,7 @@ export const BdashQuery = () => {
       <VStack spacing={10} align="stretch">
         <SqlSection querySql={querySql} />
         {bdashQuery.chart_svg && <SvgSection chartSvg={bdashQuery.chart_svg} />}
-        <ResultSection
-          headerRow={headerRow}
-          resultTsvRows={resultTsvRows}
-          isLoading={isLoadingResultTSV}
-        />
+        <ResultSection queryResult={queryResult} isLoading={isLoadingResultTSV} />
         {dataSourceInfo && <DataSourceInfoSection dataSourceInfo={dataSourceInfo} />}
       </VStack>
 
@@ -327,15 +334,7 @@ const SectionHeader: React.FC<{
 )
 
 const ResultSection = memo(
-  ({
-    headerRow,
-    resultTsvRows,
-    isLoading,
-  }: {
-    headerRow: string[]
-    resultTsvRows: string[][]
-    isLoading: boolean
-  }) => {
+  ({ queryResult, isLoading }: { queryResult: QueryResult; isLoading: boolean }) => {
     return (
       <Box>
         <SectionHeader text="Result" />
@@ -352,13 +351,13 @@ const ResultSection = memo(
             ) : (
               <Table variant="striped" size="sm" colorScheme="blackAlpha">
                 <TableCaption placement="top">
-                  {resultTsvRows.length < MAX_DISPLAY_ROWS
-                    ? `${resultTsvRows.length} rows`
-                    : `Displaying ${MAX_DISPLAY_ROWS} of ${resultTsvRows.length} rows`}
+                  {queryResult.rows.length < MAX_DISPLAY_ROWS
+                    ? `${queryResult.rows.length} rows`
+                    : `Displaying ${MAX_DISPLAY_ROWS} of ${queryResult.rows.length} rows`}
                 </TableCaption>
                 <Thead>
                   <Tr>
-                    {headerRow?.map((columnName) => (
+                    {queryResult.columns.map((columnName) => (
                       <Th textTransform="none" key={columnName}>
                         {columnName}
                       </Th>
@@ -366,11 +365,11 @@ const ResultSection = memo(
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {resultTsvRows.slice(0, MAX_DISPLAY_ROWS).map((row) => (
+                  {queryResult.rows.slice(0, MAX_DISPLAY_ROWS).map((row) => (
                     <Tr key={row.join()}>
                       {row.map((column, i) => (
                         <Td key={`${column}_${i}`}>
-                          <TextLinker text={column} />
+                          <TextLinker text={String(column)} />
                         </Td>
                       ))}
                     </Tr>
