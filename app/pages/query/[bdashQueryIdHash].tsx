@@ -1,4 +1,4 @@
-import React, { memo, Suspense, useCallback, useEffect, useMemo, useState } from "react"
+import React, { memo, Suspense, useCallback, useMemo, useState } from "react"
 import { Head, useQuery, useParam, BlitzPage, Link, useMutation, useRouter } from "blitz"
 import Layout from "app/core/layouts/Layout"
 import getBdashQuery from "app/bdash-queries/queries/getBdashQuery"
@@ -37,7 +37,6 @@ import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import updateBdashQuery from "app/bdash-queries/mutations/updateBdashQuery"
 import deleteBdashQuery from "app/bdash-queries/mutations/deleteBdashQuery"
 import { TextLinker } from "app/core/components/TextLinker"
-import Papa from "papaparse"
 import createFavorite from "app/favorites/mutations/createFavorite"
 import deleteFavorite from "app/favorites/mutations/deleteFavorite"
 import { Chart } from "app/core/components/Chart"
@@ -73,26 +72,7 @@ export const BdashQuery = () => {
   const [createFavoriteMutation] = useMutation(createFavorite)
   const [deleteFavoriteMutation] = useMutation(deleteFavorite)
   const toast = useToast()
-  const [isLoadingResultTSV, setIsLoadingResultTSV] = useState(false)
-  const [resultTSV, setResultTSV] = useState("")
   const dataSourceInfo = parseDataSourceInfo(bdashQuery.data_source_info)
-  useEffect(() => {
-    const f = async () => {
-      setIsLoadingResultTSV(true)
-      const res = await fetch(`/api/bdash-query/${bdashQueryIdHash}/result`)
-      setIsLoadingResultTSV(false)
-      if (res.ok) {
-        const tsv = await res.text()
-        setResultTSV(tsv)
-      } else {
-        toast({
-          title: "Failed to retrieve result table data.",
-          status: "error",
-        })
-      }
-    }
-    f()
-  }, [bdashQueryIdHash, toast])
   const onClickEditSave = useCallback(async () => {
     if (currentUser === null) {
       return
@@ -160,20 +140,14 @@ export const BdashQuery = () => {
   }, [])
 
   const queryResult = useMemo(() => {
-    if (bdashQuery.result !== null) {
-      try {
-        return JSON.parse(bdashQuery.result) as QueryResult
-      } catch (err) {
-        console.warn(err)
-      }
+    if (bdashQuery.result === null) return null
+    try {
+      return JSON.parse(bdashQuery.result) as QueryResult
+    } catch (err) {
+      console.warn(err)
+      return null
     }
-    const { data } = Papa.parse(resultTSV.trim(), { delimiter: "\t" })
-    const columns = data.shift() || []
-    return {
-      columns,
-      rows: data,
-    } as QueryResult
-  }, [bdashQuery.result, resultTSV])
+  }, [bdashQuery.result])
 
   const [fav, setFav] = useState<boolean>(currentFav)
   const handleClickFav = useCallback(() => {
@@ -243,7 +217,7 @@ export const BdashQuery = () => {
       <VStack spacing={10} align="stretch">
         <SqlSection querySql={querySql} />
         {bdashQuery.chart_svg && <SvgSection chartSvg={bdashQuery.chart_svg} />}
-        <ResultSection queryResult={queryResult} isLoading={isLoadingResultTSV} />
+        {queryResult && <ResultSection queryResult={queryResult} />}
         {dataSourceInfo && <DataSourceInfoSection dataSourceInfo={dataSourceInfo} />}
       </VStack>
 
@@ -333,56 +307,50 @@ const SectionHeader: React.FC<{
   </Heading>
 )
 
-const ResultSection = memo(
-  ({ queryResult, isLoading }: { queryResult: QueryResult; isLoading: boolean }) => {
-    return (
-      <Box>
-        <SectionHeader text="Result" />
-        <ContentBox>
-          <Box
-            borderColor="gray.300"
-            borderWidth="1px"
-            borderRadius="lg"
-            overflowX="scroll"
-            overflowY="hidden"
-          >
-            {isLoading ? (
-              <LoadingMain />
-            ) : (
-              <Table variant="striped" size="sm" colorScheme="blackAlpha">
-                <TableCaption placement="top">
-                  {queryResult.rows.length < MAX_DISPLAY_ROWS
-                    ? `${queryResult.rows.length} rows`
-                    : `Displaying ${MAX_DISPLAY_ROWS} of ${queryResult.rows.length} rows`}
-                </TableCaption>
-                <Thead>
-                  <Tr>
-                    {queryResult.columns.map((columnName) => (
-                      <Th textTransform="none" key={columnName}>
-                        {columnName}
-                      </Th>
-                    ))}
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {queryResult.rows.slice(0, MAX_DISPLAY_ROWS).map((row) => (
-                    <Tr key={row.join()}>
-                      {row.map((column, i) => (
-                        <Td key={`${column}_${i}`}>
-                          <TextLinker text={String(column)} />
-                        </Td>
-                      ))}
-                    </Tr>
+const ResultSection = memo(({ queryResult }: { queryResult: QueryResult }) => {
+  return (
+    <Box>
+      <SectionHeader text="Result" />
+      <ContentBox>
+        <Box
+          borderColor="gray.300"
+          borderWidth="1px"
+          borderRadius="lg"
+          overflowX="scroll"
+          overflowY="hidden"
+        >
+          <Table variant="striped" size="sm" colorScheme="blackAlpha">
+            <TableCaption placement="top">
+              {queryResult.rows.length < MAX_DISPLAY_ROWS
+                ? `${queryResult.rows.length} rows`
+                : `Displaying ${MAX_DISPLAY_ROWS} of ${queryResult.rows.length} rows`}
+            </TableCaption>
+            <Thead>
+              <Tr>
+                {queryResult.columns.map((columnName) => (
+                  <Th textTransform="none" key={columnName}>
+                    {columnName}
+                  </Th>
+                ))}
+              </Tr>
+            </Thead>
+            <Tbody>
+              {queryResult.rows.slice(0, MAX_DISPLAY_ROWS).map((row) => (
+                <Tr key={row.join()}>
+                  {row.map((column, i) => (
+                    <Td key={`${column}_${i}`}>
+                      <TextLinker text={String(column)} />
+                    </Td>
                   ))}
-                </Tbody>
-              </Table>
-            )}
-          </Box>
-        </ContentBox>
-      </Box>
-    )
-  }
-)
+                </Tr>
+              ))}
+            </Tbody>
+          </Table>
+        </Box>
+      </ContentBox>
+    </Box>
+  )
+})
 
 const SqlSection = memo(({ querySql }: { querySql: string }) => (
   <Box>
