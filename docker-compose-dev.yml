@@ -10,30 +10,6 @@ services:
       - MYSQL_DATABASE=bdash_server_dev
     ports:
       - "3307:3306"
-  minio:
-    image: minio/minio:RELEASE.2021-04-27T23-46-03Z.release.0033eb96
-    ports:
-      - "9001:9000"
-    volumes:
-      - minio-data:/minio-data
-    env_file: ./.env.local
-    command: server /minio-data
-  createbuckets:
-    image: minio/mc:RELEASE.2019-10-09T22-54-57Z
-    depends_on:
-      - minio
-    links:
-      - minio
-    env_file: ./.env.local
-    entrypoint: ""
-    command: >
-      sh -c "
-      until (mc config host add minio_host http://minio:9000 $${MINIO_ACCESS_KEY} $${MINIO_SECRET_KEY}) do echo '...waiting...' && sleep 1; done;
-      mc mb minio_host/$${S3_BUCKET};
-      mc policy set public minio_host/$${S3_BUCKET};
-      exit 0;
-      "
 
 volumes:
   mysql-data:
-  minio-data:
