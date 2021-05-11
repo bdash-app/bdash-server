@@ -28,7 +28,7 @@ export const NavigationHeader: React.FC = () => {
         >
           <Heading as="h1" size="md">
             <HStack>
-              <Image src="/logo.png" alt="" width={8} height={8} maxWidth="none" />
+              <Image src="/logo.png" alt="" width={8} height={8} maxWidth="none" ignoreFallback />
               <Text whiteSpace="nowrap" display={{ base: "none", md: "inline" }}>
                 Bdash Server
               </Text>
