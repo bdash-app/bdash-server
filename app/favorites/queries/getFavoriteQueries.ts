@@ -6,7 +6,12 @@ export default resolver.pipe(resolver.authorize(), async (_, { session }) => {
     where: { userId: session.userId },
     include: {
       bdashQuery: {
-        include: {
+        select: {
+          id: true,
+          id_hash: true,
+          title: true,
+          userId: true,
+          createdAt: true,
           user: {
             select: { id: true, name: true, icon: true },
           },

@@ -17,9 +17,12 @@ export default resolver.pipe(
       query: (paginateArgs) =>
         db.bdashQuery.findMany({
           ...paginateArgs,
-          where,
-          orderBy,
-          include: {
+          select: {
+            id: true,
+            id_hash: true,
+            title: true,
+            userId: true,
+            createdAt: true,
             user: {
               select: {
                 id: true,
@@ -28,6 +31,8 @@ export default resolver.pipe(
               },
             },
           },
+          where,
+          orderBy,
         }),
     })
 
