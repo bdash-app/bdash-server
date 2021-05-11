@@ -14,8 +14,8 @@ export const NavigationHeader: React.FC = () => {
         maxW="1100px"
         paddingTop={2}
         paddingBottom={2}
-        paddingLeft={4}
-        paddingRight={4}
+        paddingLeft={{ base: 2, md: 4 }}
+        paddingRight={{ base: 2, md: 4 }}
         marginLeft="auto"
         marginRight="auto"
         alignItems="center"
@@ -26,7 +26,7 @@ export const NavigationHeader: React.FC = () => {
           }}
           _hover={{ textDecoration: "none" }}
         >
-          <Heading as="h1" size="md">
+          <Heading as="h1" size="md" marginRight={{ base: 2, md: 4, lg: 20 }}>
             <HStack>
               <Image src="/logo.png" alt="" width={8} height={8} maxWidth="none" ignoreFallback />
               <Text whiteSpace="nowrap" display={{ base: "none", md: "inline" }}>
@@ -35,12 +35,12 @@ export const NavigationHeader: React.FC = () => {
             </HStack>
           </Heading>
         </Link>
-        <Spacer minW={4} />
-        <SearchForm width={500} keyword={query["q"]?.toString()} />
-        <Spacer minW={4} />
-        <Suspense fallback={null}>
-          <LoggedInUser />
-        </Suspense>
+        <SearchForm w={500} keyword={query["q"]?.toString()} />
+        <Box flex="auto" textAlign="right">
+          <Suspense fallback={null}>
+            <LoggedInUser />
+          </Suspense>
+        </Box>
       </Flex>
     </Box>
   )

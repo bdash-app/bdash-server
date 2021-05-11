@@ -21,7 +21,12 @@ export const LoggedInUser = () => {
 
   return (
     <Menu>
-      <MenuButton as={Button} background="transparent" rightIcon={<ChevronDownIcon />}>
+      <MenuButton
+        as={Button}
+        background="transparent"
+        paddingRight={0}
+        rightIcon={<ChevronDownIcon />}
+      >
         <HStack>
           <Avatar size="sm" src={currentUser.icon} />
           <Text display={{ base: "none", md: "inline" }}>{currentUser.name}</Text>
