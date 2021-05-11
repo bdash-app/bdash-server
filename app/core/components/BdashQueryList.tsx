@@ -5,7 +5,9 @@ import { format } from "date-fns"
 import type { BdashQuery, User } from "db"
 
 type Props = {
-  queries: (BdashQuery & { user?: Pick<User, "name" | "icon"> })[]
+  queries: (Pick<BdashQuery, "id" | "id_hash" | "title" | "createdAt"> & {
+    user?: Pick<User, "name" | "icon">
+  })[]
 }
 
 export const BdashQueryList: React.FC<Props> = ({ queries }) => {
