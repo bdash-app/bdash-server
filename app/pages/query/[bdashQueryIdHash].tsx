@@ -375,14 +375,16 @@ const DataSourceInfoSection = memo(
         <SectionHeader text="Data Source" />
         <ContentBox>
           <Table>
-            {Object.keys(dataSourceInfo).map((key) => {
-              return (
-                <Tr key={key}>
-                  <Th>{key}</Th>
-                  <Td>{dataSourceInfo[key]}</Td>
-                </Tr>
-              )
-            })}
+            <Tbody>
+              {Object.keys(dataSourceInfo).map((key) => {
+                return (
+                  <Tr key={key}>
+                    <Th>{key}</Th>
+                    <Td>{dataSourceInfo[key]}</Td>
+                  </Tr>
+                )
+              })}
+            </Tbody>
           </Table>
         </ContentBox>
       </Box>
