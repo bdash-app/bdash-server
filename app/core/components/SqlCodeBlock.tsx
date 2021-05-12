@@ -9,7 +9,7 @@ export const SqlCodeBlock = ({ sql }: { sql: string }) => {
       <SyntaxHighlighter
         language="sql"
         style={a11yLight}
-        customStyle={{ backgroundColor: "white", padding: 0 }}
+        customStyle={{ backgroundColor: "white", padding: 0, tabSize: 4 }}
       >
         {sql}
       </SyntaxHighlighter>
