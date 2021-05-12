@@ -1,6 +1,6 @@
 import { useRouterQuery } from "@blitzjs/core"
 import { useRouter } from "blitz"
-import { Box, Flex, Heading, Spacer, Link, HStack, Text, Image } from "@chakra-ui/react"
+import { Box, Flex, Heading, Link, HStack, Text, Image } from "@chakra-ui/react"
 import React, { Suspense } from "react"
 import { LoggedInUser } from "./LoggedInUser"
 import { SearchForm } from "./SearchForm"
