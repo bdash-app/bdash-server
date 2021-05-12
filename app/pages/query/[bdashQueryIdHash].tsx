@@ -168,8 +168,8 @@ export const BdashQuery = () => {
         <title>{title} | Bdash Server</title>
       </Head>
 
-      <HStack spacing={1}>
-        <Heading as="h2" size="lg" marginBottom={2} marginRight={2} minWidth="0">
+      <HStack spacing={1} marginBottom={2}>
+        <Heading as="h2" size="lg" marginRight={2} minWidth="0">
           {title}
         </Heading>
         {bdashQuery.userId === currentUser?.id && (
@@ -291,7 +291,6 @@ const SectionHeader: React.FC<{
     backgroundColor="gray.100"
     paddingTop={2}
     paddingBottom={2}
-    paddingLeft={2}
     flexDirection="row"
     display="flex"
     alignItems="center"
