@@ -30,6 +30,8 @@ import {
   Textarea,
   Input,
   useToast,
+  useClipboard,
+  Spacer,
 } from "@chakra-ui/react"
 import { ChevronDownIcon, ChevronUpIcon, EditIcon, StarIcon } from "@chakra-ui/icons"
 import { format } from "date-fns"
@@ -347,14 +349,23 @@ const ResultSection = memo(({ queryResult }: { queryResult: QueryResult }) => {
   )
 })
 
-const SqlSection = memo(({ querySql }: { querySql: string }) => (
-  <Box>
-    <SectionHeader text="SQL" />
-    <ContentBox>
-      <SqlCodeBlock sql={querySql} />
-    </ContentBox>
-  </Box>
-))
+const SqlSection = memo(({ querySql }: { querySql: string }) => {
+  const { hasCopied, onCopy } = useClipboard(querySql)
+  return (
+    <Box>
+      <HStack>
+        <SectionHeader text="SQL" />
+        <Spacer />
+        <Button size="sm" colorScheme="blue" onClick={onCopy}>
+          {hasCopied ? "Copied" : "Copy"}
+        </Button>
+      </HStack>
+      <ContentBox>
+        <SqlCodeBlock sql={querySql} />
+      </ContentBox>
+    </Box>
+  )
+})
 
 const SvgSection = memo(({ chartSvg }: { chartSvg: string }) => (
   <Box>
