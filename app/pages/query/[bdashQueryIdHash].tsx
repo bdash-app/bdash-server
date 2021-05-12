@@ -202,17 +202,13 @@ export const BdashQuery = () => {
         </Text>
       </HStack>
 
-      <ContentBox mb={5}>
-        {description ? (
+      {description && (
+        <ContentBox mb={5}>
           <Box fontSize="md">
             <TextLinker text={description} />
           </Box>
-        ) : (
-          <Text fontSize="sm" color="gray.500">
-            No description
-          </Text>
-        )}
-      </ContentBox>
+        </ContentBox>
+      )}
 
       <VStack spacing={10} align="stretch">
         <SqlSection querySql={querySql} />
