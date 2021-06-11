@@ -34,6 +34,9 @@ export default passportAuth({
           done(null, { publicData })
         }
       ),
+      authenticateOptions: {
+        hostedDomain: process.env.GOOGLE_HOSTED_DOMAIN || null,
+      },
     },
   ],
 })
