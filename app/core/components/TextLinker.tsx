@@ -1,4 +1,4 @@
-import React, { memo } from "react"
+import React, { memo, ReactElement } from "react"
 import { Link } from "@chakra-ui/react"
 
 const LINE_REGEX = /(\r\n|\r|\n)/g
@@ -15,7 +15,7 @@ export const TextLinker = memo<Props>(function TextLinker({ text }) {
       return <br key={idx} />
     }
 
-    return parse(line).map((token, i) => {
+    return parse(line).map<ReactElement | string | null>((token, i) => {
       if (typeof token === "string") {
         return token
       } else if (token.type === "link") {
