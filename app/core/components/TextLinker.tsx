@@ -19,7 +19,13 @@ export const TextLinker = memo<Props>(function TextLinker({ text }) {
       if (typeof token === "string") {
         return token
       } else if (token.type === "link") {
-        const isExternal = new URL(token.url).hostname !== window.location.hostname
+        let isExternal: boolean
+        try {
+          isExternal = new URL(token.url).hostname !== window.location.hostname
+        } catch (e) {
+          console.error(e)
+          return token
+        }
         return (
           <Link href={token.url} key={i} isExternal={isExternal} colorScheme="teal">
             {token.text}
