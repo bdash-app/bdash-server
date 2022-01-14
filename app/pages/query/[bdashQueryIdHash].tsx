@@ -1,5 +1,5 @@
 import React, { memo, Suspense, useCallback, useMemo, useState } from "react"
-import { Head, useQuery, useParam, BlitzPage, Link, useMutation, useRouter } from "blitz"
+import { Head, useQuery, useParam, BlitzPage, Link, useMutation, useRouter, dynamic } from "blitz"
 import Layout from "app/core/layouts/Layout"
 import getBdashQuery from "app/bdash-queries/queries/getBdashQuery"
 import {
@@ -41,11 +41,17 @@ import deleteBdashQuery from "app/bdash-queries/mutations/deleteBdashQuery"
 import { TextLinker } from "app/core/components/TextLinker"
 import createFavorite from "app/favorites/mutations/createFavorite"
 import deleteFavorite from "app/favorites/mutations/deleteFavorite"
-import { Chart } from "app/core/components/Chart"
+import { ChartType } from "app/core/components/QueryResultChart"
 import { ContentBox } from "app/core/components/ContentBox"
 import { LoadingMain } from "app/core/components/LoadingMain"
 import { SqlCodeBlock } from "app/core/components/SqlCodeBlock"
 import { QueryResult } from "app/core/lib/QueryResult"
+import { QueryResultSvgChart } from "app/core/components/QueryResultSvgChart"
+
+// Avoid rendering chart on server side because plotly.js does not support SSR
+const QueryResultChart = dynamic(import("app/core/components/QueryResultChart"), {
+  ssr: false,
+})
 
 const MAX_DISPLAY_ROWS = 1000
 
@@ -214,7 +220,14 @@ export const BdashQuery = () => {
 
       <VStack spacing={10} align="stretch">
         <SqlSection querySql={querySql} />
-        {bdashQuery.chart_svg && <SvgSection chartSvg={bdashQuery.chart_svg} />}
+        {bdashQuery.chart_config && queryResult ? (
+          <ChartSection
+            queryResult={queryResult}
+            chartConfig={JSON.parse(bdashQuery.chart_config)}
+          />
+        ) : bdashQuery.chart_svg ? (
+          <SvgSection chartSvg={bdashQuery.chart_svg} />
+        ) : null}
         {queryResult && <ResultSection queryResult={queryResult} />}
         {dataSourceInfo && <DataSourceInfoSection dataSourceInfo={dataSourceInfo} />}
       </VStack>
@@ -370,9 +383,18 @@ const SqlSection = memo(({ querySql }: { querySql: string }) => {
 const SvgSection = memo(({ chartSvg }: { chartSvg: string }) => (
   <Box>
     <SectionHeader text="Chart" />
-    <Chart chartSvg={chartSvg} />
+    <QueryResultSvgChart chartSvg={chartSvg} />
   </Box>
 ))
+
+const ChartSection = memo(
+  ({ queryResult, chartConfig }: { queryResult: QueryResult; chartConfig: ChartType }) => (
+    <Box>
+      <SectionHeader text="Chart" />
+      <QueryResultChart queryResult={queryResult} chartConfig={chartConfig} />
+    </Box>
+  )
+)
 
 const DataSourceInfoSection = memo(
   ({ dataSourceInfo }: { dataSourceInfo: Record<string, string> }) => {

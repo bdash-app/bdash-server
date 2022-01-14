@@ -37,24 +37,27 @@ const postBdashQuery = async (req: BlitzApiRequest, res: BlitzApiResponse) => {
     query_sql: "",
     data_source_info: "",
     chart_svg: null,
+    chart_config: null,
     result: "",
   }
 
   Object.entries(body.files).forEach(([key, value]) => {
-    const extension = key.split(".").slice(-1)[0]
-    switch (extension) {
-      case "sql":
+    switch (key) {
+      case "query.sql":
         data.query_sql = value.content
         break
-      case "tsv":
+      case "result.tsv":
         const queryResult = convertTsvToQueryResult(value.content)
         data.result = queryResult ? JSON.stringify(queryResult) : null
         break
-      case "json":
+      case "data_source.json":
         data.data_source_info = normalizeDataSourceInfo(value.content)
         break
-      case "svg":
+      case "chart.svg":
         data.chart_svg = value.content
+        break
+      case "chart.json":
+        data.chart_config = value.content
         break
       default:
         console.error(`Unexpected file: ${key}`)

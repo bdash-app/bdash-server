@@ -6,7 +6,7 @@ type Props = {
   chartSvg: string
 }
 
-export const Chart: React.FC<Props> = ({ chartSvg }) => {
+export const QueryResultSvgChart: React.FC<Props> = ({ chartSvg }) => {
   return (
     <ContentBox>
       <div className={styles.box} dangerouslySetInnerHTML={{ __html: chartSvg }} />
