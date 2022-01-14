@@ -16,7 +16,8 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "tsBuildInfoFile": ".tsbuildinfo"
+    "tsBuildInfoFile": ".tsbuildinfo",
+    "paths": { "plotly.js-basic-dist-min": ["node_modules/@types/plotly.js"] }
   },
   "exclude": ["node_modules", "**/*.e2e.ts", "cypress"],
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]

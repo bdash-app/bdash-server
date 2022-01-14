@@ -2131,6 +2131,11 @@
   dependencies:
     "@types/node" "*"
 
+"@types/d3@^3":
+  version "3.5.46"
+  resolved "https://registry.yarnpkg.com/@types/d3/-/d3-3.5.46.tgz#8b890138ea035b703ef4cdd2de0d86f8619c1c69"
+  integrity sha512-jNHfiGd41+JUV43LTMzQNidyp4Hn0XfhoSmy8baE0d/N5pGYpD+yX03JacY/MH+smFxYOQGXlz4HxkRZOuRNOQ==
+
 "@types/graceful-fs@^4.1.2":
   version "4.1.5"
   resolved "https://registry.yarnpkg.com/@types/graceful-fs/-/graceful-fs-4.1.5.tgz#21ffba0d98da4350db64891f92a9e5db3cdb4e15"
@@ -2260,6 +2265,13 @@
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@types/parse-json/-/parse-json-4.0.0.tgz#2f8bb441434d163b35fb8ffdccd7138927ffb8c0"
   integrity sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==
+
+"@types/plotly.js@1.54.20":
+  version "1.54.20"
+  resolved "https://registry.yarnpkg.com/@types/plotly.js/-/plotly.js-1.54.20.tgz#88fd8500f4860eb7590cb38366fa098618cc68df"
+  integrity sha512-vqiqq5chr72QoApD+6Hu52iuBvT5/po/sdVF74IBnacQV6J1MjH9OeFZ3GFDwKLF24xT++FMkEGAWcgVMwg2YQ==
+  dependencies:
+    "@types/d3" "^3"
 
 "@types/prettier@^2.0.0":
   version "2.2.3"
@@ -8821,6 +8833,11 @@ please-upgrade-node@^3.2.0:
   integrity sha512-gQR3WpIgNIKwBMVLkpMUeR3e1/E1y42bqDQZfql+kDeXd8COYfM8PQA4X6y7a8u9Ua9FHmsrrmirW2vHs45hWg==
   dependencies:
     semver-compare "^1.0.0"
+
+plotly.js-basic-dist-min@2.8.3:
+  version "2.8.3"
+  resolved "https://registry.yarnpkg.com/plotly.js-basic-dist-min/-/plotly.js-basic-dist-min-2.8.3.tgz#538baff1455f05c7e313f22b6b61b44919372538"
+  integrity sha512-1K+2cNo8obMcf4aGr9GTu0KPjixoI8pfZNiJafrjiIwJ0EYjMalvt5OzF61M9usdRcbxCs6UDUkH4hMrBM8kZQ==
 
 pluralize@^8.0.0:
   version "8.0.0"
