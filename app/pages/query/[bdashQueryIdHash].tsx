@@ -170,6 +170,12 @@ export const BdashQuery = () => {
     }
   }, [bdashQueryIdHash, createFavoriteMutation, deleteFavoriteMutation, fav])
 
+  const chartConfig = useMemo(() => {
+    return bdashQuery.chart_config !== null
+      ? (JSON.parse(bdashQuery.chart_config) as ChartType)
+      : null
+  }, [bdashQuery.chart_config])
+
   return (
     <>
       <Head>
@@ -220,11 +226,8 @@ export const BdashQuery = () => {
 
       <VStack spacing={10} align="stretch">
         <SqlSection querySql={querySql} />
-        {bdashQuery.chart_config && queryResult ? (
-          <ChartSection
-            queryResult={queryResult}
-            chartConfig={JSON.parse(bdashQuery.chart_config)}
-          />
+        {chartConfig && chartConfig.yColumns.length > 0 && queryResult ? (
+          <ChartSection queryResult={queryResult} chartConfig={chartConfig} />
         ) : bdashQuery.chart_svg ? (
           <SvgSection chartSvg={bdashQuery.chart_svg} />
         ) : null}
