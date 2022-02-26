@@ -80,7 +80,7 @@ model BdashQuery {
   query_sql        String     @db.Text
   data_source_info String?    @db.Text
   chart_svg        String?    @db.MediumText
-  chart_config     String?
+  chart_config     String?    @db.Text
   result           String?    @db.MediumText
   Favorite         Favorite[]
 }
