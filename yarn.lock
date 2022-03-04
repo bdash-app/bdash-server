@@ -8834,10 +8834,10 @@ please-upgrade-node@^3.2.0:
   dependencies:
     semver-compare "^1.0.0"
 
-plotly.js-basic-dist-min@2.8.3:
-  version "2.8.3"
-  resolved "https://registry.yarnpkg.com/plotly.js-basic-dist-min/-/plotly.js-basic-dist-min-2.8.3.tgz#538baff1455f05c7e313f22b6b61b44919372538"
-  integrity sha512-1K+2cNo8obMcf4aGr9GTu0KPjixoI8pfZNiJafrjiIwJ0EYjMalvt5OzF61M9usdRcbxCs6UDUkH4hMrBM8kZQ==
+plotly.js-basic-dist-min@2.9.0:
+  version "2.9.0"
+  resolved "https://registry.yarnpkg.com/plotly.js-basic-dist-min/-/plotly.js-basic-dist-min-2.9.0.tgz#71b587e0628707ed31183d3614dc3044eb734375"
+  integrity sha512-bcCl9QmZ3SGow3uy8yu/bXUwmvCz8QetbYerAwoz6J4pqfgMScVqip0DhHE7nNtoQnw0ank8YpoViMCNlsVAjA==
 
 pluralize@^8.0.0:
   version "8.0.0"
