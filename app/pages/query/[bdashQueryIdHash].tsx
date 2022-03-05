@@ -49,7 +49,7 @@ import { QueryResult } from "app/core/lib/QueryResult"
 import { QueryResultSvgChart } from "app/core/components/QueryResultSvgChart"
 
 // Avoid rendering chart on server side because plotly.js does not support SSR
-const QueryResultChart = dynamic(import("app/core/components/QueryResultChart"), {
+const QueryResultChart = dynamic(() => import("app/core/components/QueryResultChart"), {
   ssr: false,
 })
 
@@ -438,6 +438,13 @@ function parseDataSourceInfo(jsonString: string | null): Record<string, string> 
     return JSON.parse(jsonString)
   } catch {
     return null
+  }
+}
+
+// To avoid treating this as a static page. Plotly.js can be loaded only on browser, so rendering is always failed in build time.
+export async function getServerSideProps() {
+  return {
+    props: {},
   }
 }
 

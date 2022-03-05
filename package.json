@@ -13,6 +13,9 @@
     "test": "jest",
     "test:watch": "jest --watch"
   },
+  "engines": {
+    "node": "16"
+  },
   "prisma": {
     "schema": "db/schema.prisma"
   },
@@ -36,15 +39,15 @@
     "@chakra-ui/react": "1.1.2",
     "@emotion/react": "11.1.4",
     "@emotion/styled": "11.0.0",
-    "@prisma/client": "~2.17",
+    "@prisma/client": "2.30.3",
     "blitz": "0.33.1",
     "date-fns": "2.19.0",
     "final-form": "4.20.2",
     "framer-motion": "3.2.0",
     "papaparse": "5.3.0",
     "passport-google-oauth20": "2.0.0",
-    "plotly.js-basic-dist-min": "2.8.3",
-    "prisma": "~2.17",
+    "plotly.js-basic-dist-min": "2.10.0",
+    "prisma": "2.30.3",
     "react": "0.0.0-experimental-3310209d0",
     "react-dom": "0.0.0-experimental-3310209d0",
     "react-error-boundary": "3.1.1",
