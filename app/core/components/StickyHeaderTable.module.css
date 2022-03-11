@@ -1,6 +1,6 @@
 .box {
   overflow-y: scroll !important;
-  height: 500px;
+  max-height: 500px;
 }
 
 .box table thead th {
