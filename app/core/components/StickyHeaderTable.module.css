@@ -1,0 +1,10 @@
+.box {
+  overflow-y: scroll !important;
+  height: 500px;
+}
+
+.box table thead th {
+  position: sticky;
+  top: 0;
+  background-color: white;
+}

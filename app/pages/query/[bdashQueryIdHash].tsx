@@ -47,6 +47,7 @@ import { LoadingMain } from "app/core/components/LoadingMain"
 import { SqlCodeBlock } from "app/core/components/SqlCodeBlock"
 import { QueryResult } from "app/core/lib/QueryResult"
 import { QueryResultSvgChart } from "app/core/components/QueryResultSvgChart"
+import StickyHeaderTable from "app/core/components/StickyHeaderTable.module.css"
 
 // Avoid rendering chart on server side because plotly.js does not support SSR
 const QueryResultChart = dynamic(() => import("app/core/components/QueryResultChart"), {
@@ -225,13 +226,13 @@ export const BdashQuery = () => {
       )}
 
       <VStack spacing={10} align="stretch">
-        <SqlSection querySql={querySql} />
         {chartConfig && chartConfig.yColumns.length > 0 && queryResult ? (
           <ChartSection queryResult={queryResult} chartConfig={chartConfig} />
         ) : bdashQuery.chart_svg ? (
           <SvgSection chartSvg={bdashQuery.chart_svg} />
         ) : null}
         {queryResult && <ResultSection queryResult={queryResult} />}
+        <SqlSection querySql={querySql} />
         {dataSourceInfo && <DataSourceInfoSection dataSourceInfo={dataSourceInfo} />}
       </VStack>
 
@@ -331,6 +332,7 @@ const ResultSection = memo(({ queryResult }: { queryResult: QueryResult }) => {
           borderRadius="lg"
           overflowX="scroll"
           overflowY="hidden"
+          className={StickyHeaderTable.box}
         >
           <Table variant="striped" size="sm" colorScheme="blackAlpha">
             <TableCaption placement="top">
