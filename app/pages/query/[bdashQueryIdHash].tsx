@@ -47,7 +47,6 @@ import { LoadingMain } from "app/core/components/LoadingMain"
 import { SqlCodeBlock } from "app/core/components/SqlCodeBlock"
 import { QueryResult } from "app/core/lib/QueryResult"
 import { QueryResultSvgChart } from "app/core/components/QueryResultSvgChart"
-import StickyHeaderTable from "app/core/components/StickyHeaderTable.module.css"
 
 // Avoid rendering chart on server side because plotly.js does not support SSR
 const QueryResultChart = dynamic(() => import("app/core/components/QueryResultChart"), {
@@ -331,8 +330,8 @@ const ResultSection = memo(({ queryResult }: { queryResult: QueryResult }) => {
           borderWidth="1px"
           borderRadius="lg"
           overflowX="scroll"
-          overflowY="hidden"
-          className={StickyHeaderTable.box}
+          overflowY="auto"
+          maxHeight="500px"
         >
           <Table variant="striped" size="sm" colorScheme="blackAlpha">
             <TableCaption placement="top">
@@ -340,7 +339,7 @@ const ResultSection = memo(({ queryResult }: { queryResult: QueryResult }) => {
                 ? `${queryResult.rows.length} rows`
                 : `Displaying ${MAX_DISPLAY_ROWS} of ${queryResult.rows.length} rows`}
             </TableCaption>
-            <Thead>
+            <Thead position="sticky" top={0} bgColor="white">
               <Tr>
                 {queryResult.columns.map((columnName) => (
                   <Th textTransform="none" key={columnName}>
