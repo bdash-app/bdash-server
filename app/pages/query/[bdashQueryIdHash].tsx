@@ -225,13 +225,13 @@ export const BdashQuery = () => {
       )}
 
       <VStack spacing={10} align="stretch">
-        <SqlSection querySql={querySql} />
         {chartConfig && chartConfig.yColumns.length > 0 && queryResult ? (
           <ChartSection queryResult={queryResult} chartConfig={chartConfig} />
         ) : bdashQuery.chart_svg ? (
           <SvgSection chartSvg={bdashQuery.chart_svg} />
         ) : null}
         {queryResult && <ResultSection queryResult={queryResult} />}
+        <SqlSection querySql={querySql} />
         {dataSourceInfo && <DataSourceInfoSection dataSourceInfo={dataSourceInfo} />}
       </VStack>
 
@@ -330,7 +330,8 @@ const ResultSection = memo(({ queryResult }: { queryResult: QueryResult }) => {
           borderWidth="1px"
           borderRadius="lg"
           overflowX="scroll"
-          overflowY="hidden"
+          overflowY="auto"
+          maxHeight="500px"
         >
           <Table variant="striped" size="sm" colorScheme="blackAlpha">
             <TableCaption placement="top">
@@ -338,7 +339,7 @@ const ResultSection = memo(({ queryResult }: { queryResult: QueryResult }) => {
                 ? `${queryResult.rows.length} rows`
                 : `Displaying ${MAX_DISPLAY_ROWS} of ${queryResult.rows.length} rows`}
             </TableCaption>
-            <Thead>
+            <Thead position="sticky" top={0} bgColor="white">
               <Tr>
                 {queryResult.columns.map((columnName) => (
                   <Th textTransform="none" key={columnName}>
