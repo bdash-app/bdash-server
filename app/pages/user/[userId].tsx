@@ -12,7 +12,7 @@ const User = () => {
   return <UserPageContainer user={user} />
 }
 
-const ShowUserPage: BlitzPage = () => {
+const ShowUserByIdPage: BlitzPage = () => {
   return (
     <Suspense fallback={<LoadingMain />}>
       <User />
@@ -20,7 +20,7 @@ const ShowUserPage: BlitzPage = () => {
   )
 }
 
-ShowUserPage.authenticate = true
-ShowUserPage.getLayout = (page) => <Layout>{page}</Layout>
+ShowUserByIdPage.authenticate = true
+ShowUserByIdPage.getLayout = (page) => <Layout>{page}</Layout>
 
-export default ShowUserPage
+export default ShowUserByIdPage
