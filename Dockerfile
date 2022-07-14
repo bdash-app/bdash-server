@@ -17,7 +17,6 @@ WORKDIR /app
 COPY . .
 COPY --from=production /app/node_modules ./node_modules
 COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/.blitz ./.blitz
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 ENV TZ Asia/Tokyo
 ENV PORT 3000
