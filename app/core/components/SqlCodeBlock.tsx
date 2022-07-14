@@ -1,18 +1,21 @@
 import { Box } from "@chakra-ui/react"
-import SyntaxHighlighter from "react-syntax-highlighter"
-import { a11yLight } from "react-syntax-highlighter/dist/cjs/styles/hljs"
+import hljs from "highlight.js/lib/core"
+import sql from "highlight.js/lib/languages/sql"
+import "highlight.js/styles/a11y-light.css"
+import { useEffect } from "react"
 import styles from "./SqlCodeBlock.module.css"
 
+hljs.registerLanguage("sql", sql)
+
 export const SqlCodeBlock = ({ sql }: { sql: string }) => {
+  useEffect(() => {
+    hljs.initHighlighting()
+  })
   return (
     <Box fontSize="sm" className={styles.box}>
-      <SyntaxHighlighter
-        language="sql"
-        style={a11yLight}
-        customStyle={{ backgroundColor: "white", padding: 0, tabSize: 4 }}
-      >
-        {sql}
-      </SyntaxHighlighter>
+      <pre>
+        <code>{sql}</code>
+      </pre>
     </Box>
   )
 }
