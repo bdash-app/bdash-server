@@ -56,7 +56,6 @@ export const theme = extendTheme({
         background: "gray.100",
       },
       a: {
-        color: "teal",
         textDecoration: "none",
         _hover: {
           textDecoration: "underline",
