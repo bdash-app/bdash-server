@@ -1,12 +1,15 @@
 import { BlitzApiRequest, BlitzApiResponse } from "blitz"
 import db, { Prisma } from "db"
-import { createHash } from "crypto"
 import { convertTsvToQueryResult } from "app/core/lib/QueryResult"
 
-type BdashClientRequestBody = { description: string; files: { [key: string]: { content: string } } }
+type BdashClientRequestBody = {
+  idHash: string
+  description: string
+  files: { [key: string]: { content: string } }
+}
 
-const postBdashQuery = async (req: BlitzApiRequest, res: BlitzApiResponse) => {
-  if (req.method !== "POST") {
+const putBdashQuery = async (req: BlitzApiRequest, res: BlitzApiResponse) => {
+  if (req.method !== "PUT") {
     res.status(405).end()
     return
   }
@@ -25,12 +28,16 @@ const postBdashQuery = async (req: BlitzApiRequest, res: BlitzApiResponse) => {
 
   const body = req.body as BdashClientRequestBody
 
-  const currentDate = new Date().toString()
-  const random = Math.random().toString()
-  const idHash = createHash("md5").update(`${user.id}_${currentDate}_${random}`).digest("hex")
+  const bdashQuery = await db.bdashQuery.findUnique({ where: { id_hash: body.idHash } })
+  if (bdashQuery === null) {
+    res.status(404).end()
+    return
+  } else if (bdashQuery.userId !== user.id) {
+    res.status(403).end()
+    return
+  }
 
-  const data: Prisma.BdashQueryCreateArgs["data"] = {
-    id_hash: idHash,
+  const data: Prisma.BdashQueryUpdateArgs["data"] = {
     userId: user.id,
     title: body.description,
     description: "",
@@ -65,14 +72,20 @@ const postBdashQuery = async (req: BlitzApiRequest, res: BlitzApiResponse) => {
     }
   })
 
-  const bdashQuery = await db.bdashQuery.create({ data, select: { id_hash: true } })
+  const updatedBdashQuery = await db.bdashQuery.update({
+    where: { id_hash: body.idHash },
+    data,
+    select: { id_hash: true },
+  })
 
-  res.statusCode = 201
+  res.statusCode = 200
   res.setHeader("Content-Type", "application/json")
-  res.end(JSON.stringify({
-    id: bdashQuery.id_hash,
-    html_url: `${process.env.WEB_HOST}/query/${bdashQuery.id_hash}`,
-  }))
+  res.end(
+    JSON.stringify({
+      id: updatedBdashQuery.id_hash,
+      html_url: `${process.env.WEB_HOST}/query/${updatedBdashQuery.id_hash}`,
+    })
+  )
 }
 
 function normalizeDataSourceInfo(json: string): string | null {
@@ -93,4 +106,4 @@ function normalizeDataSourceInfo(json: string): string | null {
   return JSON.stringify(data)
 }
 
-export default postBdashQuery
+export default putBdashQuery
