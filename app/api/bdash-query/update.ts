@@ -38,14 +38,9 @@ const putBdashQuery = async (req: BlitzApiRequest, res: BlitzApiResponse) => {
   }
 
   const data: Prisma.BdashQueryUpdateArgs["data"] = {
-    userId: user.id,
     title: body.description,
-    description: "",
-    query_sql: "",
-    data_source_info: "",
     chart_svg: null,
     chart_config: null,
-    result: "",
   }
 
   Object.entries(body.files).forEach(([key, value]) => {
