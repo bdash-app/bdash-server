@@ -15,9 +15,10 @@ export default passportAuth({
         },
         async function (_token, _tokenSecret, profile, done) {
           const email = profile.emails && profile.emails[0]?.value
+          const name = email.split("@")[0]
           const accessToken = randomBytes(20).toString("hex")
           const user = await db.user.upsert({
-            where: { email },
+            where: { name }, // temp
             create: {
               email,
               name: email.split("@")[0],
