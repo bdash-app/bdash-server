@@ -2,7 +2,7 @@
   "name": "bdash-server",
   "version": "1.0.0",
   "scripts": {
-    "dev": "docker-compose -f docker-compose-dev.yml up -d && blitz dev",
+    "dev": "docker compose -f docker-compose-dev.yml up -d && blitz dev",
     "build": "prisma generate --schema db/schema.prisma && blitz build",
     "start": "blitz start",
     "start:production": "blitz start --port $PORT",
