@@ -48,7 +48,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 Run an app container with the image built by [Dockerfile](https://github.com/morishin/bdash-server/blob/main/Dockerfile) for production.
 
 ```sh
-docker-compose -f docker-compose-with-app-container.yml up --build
+docker compose -f docker-compose-with-app-container.yml up --build
 ```
 
 ## Tests
