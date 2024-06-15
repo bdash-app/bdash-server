@@ -47,6 +47,7 @@ import { LoadingMain } from "app/core/components/LoadingMain"
 import { SqlCodeBlock } from "app/core/components/SqlCodeBlock"
 import { QueryResult } from "app/core/lib/QueryResult"
 import { QueryResultSvgChart } from "app/core/components/QueryResultSvgChart"
+import { QueryResultTable } from "app/core/components/QueryResultTable"
 
 // Avoid rendering chart on server side because plotly.js does not support SSR
 const QueryResultChart = dynamic(() => import("app/core/components/QueryResultChart"), {
@@ -324,44 +325,7 @@ const ResultSection = memo(({ queryResult }: { queryResult: QueryResult }) => {
   return (
     <Box>
       <SectionHeader text="Result" />
-      <ContentBox>
-        <Box
-          borderColor="gray.300"
-          borderWidth="1px"
-          borderRadius="lg"
-          overflowX="scroll"
-          overflowY="auto"
-          maxHeight="500px"
-        >
-          <Table variant="striped" size="sm" colorScheme="blackAlpha">
-            <TableCaption placement="top">
-              {queryResult.rows.length < MAX_DISPLAY_ROWS
-                ? `${queryResult.rows.length} rows`
-                : `Displaying ${MAX_DISPLAY_ROWS} of ${queryResult.rows.length} rows`}
-            </TableCaption>
-            <Thead position="sticky" top={0} bgColor="white">
-              <Tr>
-                {queryResult.columns.map((columnName) => (
-                  <Th textTransform="none" key={columnName}>
-                    {columnName}
-                  </Th>
-                ))}
-              </Tr>
-            </Thead>
-            <Tbody>
-              {queryResult.rows.slice(0, MAX_DISPLAY_ROWS).map((row) => (
-                <Tr key={row.join()}>
-                  {row.map((column, i) => (
-                    <Td key={`${column}_${i}`}>
-                      <TextLinker text={String(column)} />
-                    </Td>
-                  ))}
-                </Tr>
-              ))}
-            </Tbody>
-          </Table>
-        </Box>
-      </ContentBox>
+      <QueryResultTable queryResult={queryResult} maxDisplayRows={MAX_DISPLAY_ROWS} />
     </Box>
   )
 })

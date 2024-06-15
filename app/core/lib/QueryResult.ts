@@ -1,11 +1,5 @@
 import Papa from "papaparse"
-
-type QueryResultValue = string | number | boolean | null
-
-export type QueryResult = {
-  columns: string[]
-  rows: QueryResultValue[][]
-}
+import { QueryResultValue, QueryResult } from "types"
 
 export function convertTsvToQueryResult(tsv: string): QueryResult | null {
   const { data } = Papa.parse(tsv.trim(), { delimiter: "\t" })

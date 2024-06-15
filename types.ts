@@ -16,3 +16,19 @@ declare module "blitz" {
     }
   }
 }
+export type RunnerDataSourceFormValue = {
+  dataSourceName: string
+  host: string
+  port: number
+  username: string
+  password: string
+  database: string
+  ssl: boolean
+}
+
+export type QueryResultValue = string | number | boolean | null
+export type QueryResult = {
+  columns: string[]
+  rows: QueryResultValue[][]
+  error: string | null
+}
