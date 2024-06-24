@@ -45,7 +45,7 @@ import { ChartType } from "app/core/components/QueryResultChart"
 import { ContentBox } from "app/core/components/ContentBox"
 import { LoadingMain } from "app/core/components/LoadingMain"
 import { SqlCodeBlock } from "app/core/components/SqlCodeBlock"
-import { QueryResult } from "app/core/lib/QueryResult"
+import { QueryResult } from "types"
 import { QueryResultSvgChart } from "app/core/components/QueryResultSvgChart"
 import { QueryResultTable } from "app/core/components/QueryResultTable"
 

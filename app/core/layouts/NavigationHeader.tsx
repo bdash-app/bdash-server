@@ -1,5 +1,5 @@
 import { useRouter, useRouterQuery } from "blitz"
-import { Box, Flex, Heading, Link, HStack, Text, Image } from "@chakra-ui/react"
+import { Box, Flex, Heading, Link, HStack, Text, Image, Button } from "@chakra-ui/react"
 import React, { Suspense } from "react"
 import { LoggedInUser } from "./LoggedInUser"
 import { SearchForm } from "./SearchForm"
@@ -18,6 +18,7 @@ export const NavigationHeader: React.FC = () => {
         marginLeft="auto"
         marginRight="auto"
         alignItems="center"
+        gap="2"
       >
         <Link
           onClick={() => {
@@ -35,6 +36,11 @@ export const NavigationHeader: React.FC = () => {
           </Heading>
         </Link>
         <SearchForm w={500} keyword={query["q"]?.toString()} />
+        <Link href="/runner">
+          <Button colorScheme="teal" variant="outline" size={{ base: "sm", md: "md" }}>
+            Runner
+          </Button>
+        </Link>
         <Box flex="auto" textAlign="right">
           <Suspense fallback={null}>
             <LoggedInUser />

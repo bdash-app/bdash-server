@@ -10,5 +10,6 @@ export function convertTsvToQueryResult(tsv: string): QueryResult | null {
   return {
     columns: columns.map(String),
     rows: data as QueryResultValue[][],
+    error: null,
   }
 }

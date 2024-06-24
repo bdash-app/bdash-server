@@ -155,7 +155,7 @@ export const RunnerDataSourceModal = ({
               </ModalBody>
               <ModalFooter>
                 <Text fontSize="xs" style={{ textWrap: "balance" } as any}>
-                  * This data source will be encrypted and stored in your browser's local storage.
+                  * This data source will be encrypted and stored in your browser.
                 </Text>
                 <Button colorScheme="blue" mr={3} type="submit">
                   Save

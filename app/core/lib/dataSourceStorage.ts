@@ -19,3 +19,9 @@ export const addDataSource = (dataSource: RunnerDataSource) => {
   dataSources.push(dataSource)
   window.localStorage.setItem("dataSources", JSON.stringify(dataSources))
 }
+
+export const deleteDataSource = (dataSource: RunnerDataSource) => {
+  const dataSources = getDataSources()
+  const newDataSources = dataSources.filter((ds) => ds.encryptedBody !== dataSource.encryptedBody)
+  window.localStorage.setItem("dataSources", JSON.stringify(newDataSources))
+}

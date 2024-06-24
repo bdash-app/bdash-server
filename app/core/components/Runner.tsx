@@ -117,7 +117,6 @@ export const Runner = () => {
         <HStack>
           <Button
             colorScheme="teal"
-            variant="outline"
             isLoading={isRunning}
             isDisabled={!isExecutable}
             mr={3}
@@ -125,7 +124,7 @@ export const Runner = () => {
           >
             Re-run
           </Button>
-          <Button colorScheme="teal" mr={3} onClick={() => setQueryResult(null)}>
+          <Button colorScheme="teal" variant="outline" mr={3} onClick={() => setQueryResult(null)}>
             Save
           </Button>
         </HStack>

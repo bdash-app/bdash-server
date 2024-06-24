@@ -26,24 +26,27 @@ import {
   Checkbox,
   Select,
   FormErrorMessage,
+  IconButton,
 } from "@chakra-ui/react"
 import updateUser from "app/users/mutations/updateUser"
 import { EditableControls } from "app/core/components/EditableControls"
 import { LoadingMain } from "app/core/components/LoadingMain"
-import { getDataSources, RunnerDataSource } from "app/core/lib/dataSourceStorage"
+import { deleteDataSource, getDataSources, RunnerDataSource } from "app/core/lib/dataSourceStorage"
 import { format } from "date-fns"
-import { AddIcon } from "@chakra-ui/icons"
+import { AddIcon, DeleteIcon } from "@chakra-ui/icons"
 import { Field, Form } from "react-final-form"
+import { RunnerDataSourceModal } from "app/core/components/RunnerDataSourceModal"
 
 const UserInfo = () => {
   const currentUser = useCurrentUser()
   const [updateUserMutation] = useMutation(updateUser)
   const [editingName, setEditingName] = useState(currentUser?.name || "Guest")
   const [dataSources, setDataSources] = useState<RunnerDataSource[]>([])
+  const onAddDataSource = () => {
+    setDataSources(getDataSources())
+  }
 
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const initialRef = React.useRef(null)
-  const finalRef = React.useRef(null)
 
   const onSubmitName = useCallback(
     async (updatedName: string) => {
@@ -68,11 +71,10 @@ const UserInfo = () => {
     setDataSources(getDataSources())
   }, [])
 
-  const required = (value) => (value ? undefined : "Required")
-  const mustBeNumber = (value) => (isNaN(value) ? "Must be a number" : undefined)
-  const onSubmitDataSource = (values: RunnerDataSource) => {
-    console.log("🔥", JSON.stringify(values, null, 2))
-    // TODO: NEXT_PUBLIC_PUBLIC_KEY_JWT で暗号化して addDataSource する
+  const onClickDeleteDataSource = (dataSource: RunnerDataSource) => {
+    if (!window.confirm(`Are you sure to delete "${dataSource.name}"?`)) return
+    deleteDataSource(dataSource)
+    setDataSources(getDataSources())
   }
 
   return (
@@ -96,7 +98,13 @@ const UserInfo = () => {
         <Heading as="h2" fontSize="2xl" marginTop={3}>
           Bdash.app
         </Heading>
-        <Text>Set the following values to Bdash.app.</Text>
+        <Text>
+          Set the following values to{" "}
+          <Text as="span" color="teal">
+            <Link href="/runner">Bdash.app</Link>
+          </Text>
+          .
+        </Text>
         <Heading as="h3" fontSize="lg">
           Your Access Token
         </Heading>
@@ -108,25 +116,43 @@ const UserInfo = () => {
       </VStack>
       <VStack align="flex-start" width={{ base: 300, md: 500 }}>
         <Heading as="h2" fontSize="2xl" marginTop={3}>
-          Data Source
+          Runner
         </Heading>
         <Text>
-          Used by{" "}
+          Your data sources used in{" "}
           <Text as="span" color="teal">
-            <Link href="/runner">Bdash Server Runner</Link>
-          </Text>
-          .
+            <Link href="/runner">Runner</Link>
+          </Text>{" "}
+          page. These are encrypted and stored in your browser.
         </Text>
         <VStack bg="white" borderRadius="xl" align="stretch" width="100%">
           {dataSources.map((dataSource) => {
             const createdAtString = format(dataSource.createdAt, "(yyyy-MM-dd)")
             return (
-              <Button key={dataSource.name} variant="ghost">
-                <HStack justify="space-between">
+              <HStack
+                key={dataSource.name}
+                justifyContent="space-between"
+                alignItems="center"
+                paddingInline="4"
+                paddingBlockStart="2"
+              >
+                <HStack>
                   <Text>{dataSource.name}</Text>
-                  <Text>{createdAtString}</Text>
+                  <Text fontSize="sm" color="gray.500">
+                    {createdAtString}
+                  </Text>
                 </HStack>
-              </Button>
+                <Button
+                  colorScheme="red"
+                  size="xs"
+                  variant="outline"
+                  onClick={() => {
+                    onClickDeleteDataSource(dataSource)
+                  }}
+                >
+                  Delete
+                </Button>
+              </HStack>
             )
           })}
           <Button leftIcon={<AddIcon />} variant="ghost" onClick={onOpen}>
@@ -134,133 +160,7 @@ const UserInfo = () => {
           </Button>
         </VStack>
       </VStack>
-
-      <Modal
-        initialFocusRef={initialRef}
-        finalFocusRef={finalRef}
-        isOpen={isOpen}
-        onClose={onClose}
-      >
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Add Data Source</ModalHeader>
-          <ModalCloseButton />
-          <Form
-            onSubmit={onSubmitDataSource}
-            render={({ handleSubmit }) => (
-              <form onSubmit={handleSubmit}>
-                <ModalBody pb={6}>
-                  <Field name="dataSourceName" validate={required}>
-                    {({ input, meta }) => (
-                      <FormControl isInvalid={meta.error && meta.touched}>
-                        <FormLabel>Data Source Name</FormLabel>
-                        <Input {...input} ref={initialRef} placeholder="My Database" />
-                        {meta.error && meta.touched && (
-                          <FormErrorMessage>{meta.error}</FormErrorMessage>
-                        )}
-                      </FormControl>
-                    )}
-                  </Field>
-
-                  <FormControl mt={4}>
-                    <FormLabel>Type</FormLabel>
-                    <Field
-                      name="type"
-                      component="select"
-                      validate={required}
-                      initialValue="postgres"
-                    >
-                      {({ input }) => (
-                        <Select {...input} variant="outline">
-                          <option value="postgres">Postgres</option>
-                        </Select>
-                      )}
-                    </Field>
-                  </FormControl>
-
-                  <Field name="host" validate={required}>
-                    {({ input, meta }) => (
-                      <FormControl mt={4} isInvalid={meta.error && meta.touched}>
-                        <FormLabel>Host</FormLabel>
-                        <Input {...input} placeholder="" />
-                        {meta.error && meta.touched && (
-                          <FormErrorMessage>{meta.error}</FormErrorMessage>
-                        )}
-                      </FormControl>
-                    )}
-                  </Field>
-
-                  <Field name="port" validate={mustBeNumber}>
-                    {({ input, meta }) => (
-                      <FormControl mt={4} isInvalid={meta.error && meta.touched}>
-                        <FormLabel>Port</FormLabel>
-                        <Input {...input} placeholder="5432" />
-                        {meta.error && meta.touched && (
-                          <FormErrorMessage>{meta.error}</FormErrorMessage>
-                        )}
-                      </FormControl>
-                    )}
-                  </Field>
-
-                  <Field name="username" validate={required}>
-                    {({ input, meta }) => (
-                      <FormControl mt={4} isInvalid={meta.error && meta.touched}>
-                        <FormLabel>Username</FormLabel>
-                        <Input {...input} placeholder="" />
-                        {meta.error && meta.touched && (
-                          <FormErrorMessage>{meta.error}</FormErrorMessage>
-                        )}
-                      </FormControl>
-                    )}
-                  </Field>
-
-                  <Field name="password" validate={required}>
-                    {({ input, meta }) => (
-                      <FormControl mt={4} isInvalid={meta.error && meta.touched}>
-                        <FormLabel>Password</FormLabel>
-                        <Input {...input} placeholder="" />
-                        {meta.error && meta.touched && (
-                          <FormErrorMessage>{meta.error}</FormErrorMessage>
-                        )}
-                      </FormControl>
-                    )}
-                  </Field>
-
-                  <Field name="database" validate={required}>
-                    {({ input, meta }) => (
-                      <FormControl mt={4} isInvalid={meta.error && meta.touched}>
-                        <FormLabel>Database</FormLabel>
-                        <Input {...input} placeholder="" />
-                        {meta.error && meta.touched && (
-                          <FormErrorMessage>{meta.error}</FormErrorMessage>
-                        )}
-                      </FormControl>
-                    )}
-                  </Field>
-
-                  <Field name="ssl" type="checkbox" initialValue={true as any}>
-                    {({ input, meta }) => (
-                      <FormControl mt={4}>
-                        <FormLabel>SSL</FormLabel>
-                        <Checkbox {...input} defaultChecked>
-                          SSL
-                        </Checkbox>
-                      </FormControl>
-                    )}
-                  </Field>
-                </ModalBody>
-
-                <ModalFooter>
-                  <Button colorScheme="blue" mr={3} type="submit">
-                    Save
-                  </Button>
-                  <Button onClick={onClose}>Cancel</Button>
-                </ModalFooter>
-              </form>
-            )}
-          />
-        </ModalContent>
-      </Modal>
+      <RunnerDataSourceModal isOpen={isOpen} onClose={onClose} onAddDataSource={onAddDataSource} />
     </VStack>
   )
 }
