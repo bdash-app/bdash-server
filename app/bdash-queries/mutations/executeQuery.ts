@@ -7,9 +7,7 @@ import * as z from "zod"
 const ExecuteQuery = z.object({
   body: z.string().min(1),
   dataSource: z.object({
-    name: z.string(),
     encryptedBody: z.string(),
-    createdAt: z.date(),
   }),
 })
 

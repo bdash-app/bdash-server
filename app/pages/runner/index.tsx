@@ -17,6 +17,13 @@ const RunnerPage = () => {
   )
 }
 
+// To avoid treating this as a static page. Plotly.js can be loaded only on browser, so rendering is always failed in build time.
+export async function getServerSideProps() {
+  return {
+    props: {},
+  }
+}
+
 RunnerPage.authenticate = true
 RunnerPage.getLayout = (page) => <Layout>{page}</Layout>
 

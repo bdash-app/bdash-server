@@ -1,41 +1,27 @@
-import React, { Suspense, useCallback, useEffect, useState } from "react"
-import { useCurrentUser } from "app/core/hooks/useCurrentUser"
-import { Head, Link, useMutation } from "blitz"
-import Layout from "app/core/layouts/Layout"
+import { AddIcon } from "@chakra-ui/icons"
 import {
-  VStack,
   Avatar,
-  Text,
-  Editable,
-  EditablePreview,
-  EditableInput,
-  HStack,
-  Heading,
-  Input,
   Button,
+  Editable,
+  EditableInput,
+  EditablePreview,
+  Heading,
+  HStack,
+  Input,
+  Text,
   useDisclosure,
-  FormControl,
-  FormLabel,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Checkbox,
-  Select,
-  FormErrorMessage,
-  IconButton,
+  VStack,
 } from "@chakra-ui/react"
-import updateUser from "app/users/mutations/updateUser"
 import { EditableControls } from "app/core/components/EditableControls"
 import { LoadingMain } from "app/core/components/LoadingMain"
-import { deleteDataSource, getDataSources, RunnerDataSource } from "app/core/lib/dataSourceStorage"
-import { format } from "date-fns"
-import { AddIcon, DeleteIcon } from "@chakra-ui/icons"
-import { Field, Form } from "react-final-form"
 import { RunnerDataSourceModal } from "app/core/components/RunnerDataSourceModal"
+import { useCurrentUser } from "app/core/hooks/useCurrentUser"
+import Layout from "app/core/layouts/Layout"
+import { deleteDataSource, getDataSources, RunnerDataSource } from "app/core/lib/dataSourceStorage"
+import updateUser from "app/users/mutations/updateUser"
+import { Head, Link, useMutation } from "blitz"
+import { format } from "date-fns"
+import React, { Suspense, useCallback, useEffect, useState } from "react"
 
 const UserInfo = () => {
   const currentUser = useCurrentUser()
@@ -72,7 +58,7 @@ const UserInfo = () => {
   }, [])
 
   const onClickDeleteDataSource = (dataSource: RunnerDataSource) => {
-    if (!window.confirm(`Are you sure to delete "${dataSource.name}"?`)) return
+    if (!window.confirm(`Are you sure to delete "${dataSource.dataSourceName}"?`)) return
     deleteDataSource(dataSource)
     setDataSources(getDataSources())
   }
@@ -105,11 +91,11 @@ const UserInfo = () => {
           </Text>
           .
         </Text>
-        <Heading as="h3" fontSize="lg">
+        <Heading as="h3" fontSize="md">
           Your Access Token
         </Heading>
         <CopyableText text={currentUser?.accessToken || ""} />
-        <Heading as="h3" fontSize="lg">
+        <Heading as="h3" fontSize="md">
           Bdash Server URL
         </Heading>
         <CopyableText text={`${window.location.protocol}//${window.location.host}/`} />
@@ -130,14 +116,14 @@ const UserInfo = () => {
             const createdAtString = format(dataSource.createdAt, "(yyyy-MM-dd)")
             return (
               <HStack
-                key={dataSource.name}
+                key={dataSource.dataSourceName}
                 justifyContent="space-between"
                 alignItems="center"
                 paddingInline="4"
                 paddingBlockStart="2"
               >
                 <HStack>
-                  <Text>{dataSource.name}</Text>
+                  <Text>{dataSource.dataSourceName}</Text>
                   <Text fontSize="sm" color="gray.500">
                     {createdAtString}
                   </Text>
@@ -155,7 +141,7 @@ const UserInfo = () => {
               </HStack>
             )
           })}
-          <Button leftIcon={<AddIcon />} variant="ghost" onClick={onOpen}>
+          <Button color="gray.600" leftIcon={<AddIcon />} variant="ghost" onClick={onOpen}>
             Add
           </Button>
         </VStack>

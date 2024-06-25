@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react"
 import Chart from "../lib/Chart"
-import { QueryResult } from "../lib/QueryResult"
+import { ChartType, QueryResult } from "types"
 import { ContentBox } from "./ContentBox"
 
 type Props = {
@@ -18,18 +18,6 @@ const QueryResultChart: React.FC<Props> = ({ queryResult, chartConfig }) => {
       <div ref={chartRef} />
     </ContentBox>
   )
-}
-
-export type ChartType = {
-  readonly id: number
-  readonly queryId: number
-  readonly type: "line" | "scatter" | "bar" | "area" | "pie"
-  readonly xColumn: string
-  readonly yColumns: Array<string>
-  readonly groupColumns: Array<string>
-  readonly stacking: 0 | string
-  readonly updatedAt: string
-  readonly createdAt: string
 }
 
 const drawChart = async (

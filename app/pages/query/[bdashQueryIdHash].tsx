@@ -1,53 +1,50 @@
-import React, { memo, Suspense, useCallback, useMemo, useState } from "react"
-import { Head, useQuery, useParam, BlitzPage, Link, useMutation, useRouter, dynamic } from "blitz"
-import Layout from "app/core/layouts/Layout"
-import getBdashQuery from "app/bdash-queries/queries/getBdashQuery"
+import { ChevronDownIcon, ChevronUpIcon, EditIcon, StarIcon } from "@chakra-ui/icons"
 import {
-  Box,
-  Heading,
-  Flex,
-  VStack,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  TableCaption,
   Avatar,
+  Box,
+  Button,
+  Flex,
+  Heading,
   HStack,
-  Text,
   IconButton,
+  Input,
   Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
   ModalBody,
   ModalCloseButton,
-  useDisclosure,
-  Button,
-  Textarea,
-  Input,
-  useToast,
-  useClipboard,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Spacer,
+  Table,
+  Tbody,
+  Td,
+  Text,
+  Textarea,
+  Th,
+  Tr,
+  useClipboard,
+  useDisclosure,
+  useToast,
+  VStack,
 } from "@chakra-ui/react"
-import { ChevronDownIcon, ChevronUpIcon, EditIcon, StarIcon } from "@chakra-ui/icons"
-import { format } from "date-fns"
-import { useCurrentUser } from "app/core/hooks/useCurrentUser"
-import updateBdashQuery from "app/bdash-queries/mutations/updateBdashQuery"
 import deleteBdashQuery from "app/bdash-queries/mutations/deleteBdashQuery"
-import { TextLinker } from "app/core/components/TextLinker"
-import createFavorite from "app/favorites/mutations/createFavorite"
-import deleteFavorite from "app/favorites/mutations/deleteFavorite"
-import { ChartType } from "app/core/components/QueryResultChart"
+import updateBdashQuery from "app/bdash-queries/mutations/updateBdashQuery"
+import getBdashQuery from "app/bdash-queries/queries/getBdashQuery"
 import { ContentBox } from "app/core/components/ContentBox"
 import { LoadingMain } from "app/core/components/LoadingMain"
-import { SqlCodeBlock } from "app/core/components/SqlCodeBlock"
-import { QueryResult } from "types"
 import { QueryResultSvgChart } from "app/core/components/QueryResultSvgChart"
 import { QueryResultTable } from "app/core/components/QueryResultTable"
+import { SqlCodeBlock } from "app/core/components/SqlCodeBlock"
+import { TextLinker } from "app/core/components/TextLinker"
+import { useCurrentUser } from "app/core/hooks/useCurrentUser"
+import Layout from "app/core/layouts/Layout"
+import createFavorite from "app/favorites/mutations/createFavorite"
+import deleteFavorite from "app/favorites/mutations/deleteFavorite"
+import { BlitzPage, dynamic, Head, Link, useMutation, useParam, useQuery, useRouter } from "blitz"
+import { format } from "date-fns"
+import React, { memo, Suspense, useCallback, useMemo, useState } from "react"
+import { ChartType, QueryResult } from "types"
 
 // Avoid rendering chart on server side because plotly.js does not support SSR
 const QueryResultChart = dynamic(() => import("app/core/components/QueryResultChart"), {

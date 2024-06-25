@@ -1,5 +1,10 @@
 export type RunnerDataSource = {
-  name: string
+  type: string
+  host: string
+  port: number
+  database: string
+  username: string
+  dataSourceName: string
   encryptedBody: string
   createdAt: Date
 }
@@ -7,11 +12,13 @@ export type RunnerDataSource = {
 export const getDataSources = (): RunnerDataSource[] => {
   const rawDataSources = window.localStorage.getItem("dataSources")
   if (!rawDataSources) return []
-  return JSON.parse(rawDataSources).map((rawDataSource) => ({
-    name: rawDataSource.name,
-    encryptedBody: rawDataSource.encryptedBody,
-    createdAt: new Date(rawDataSource.createdAt),
-  }))
+  return JSON.parse(rawDataSources).map(
+    (rawDataSource) =>
+      ({
+        ...rawDataSource,
+        createdAt: new Date(rawDataSource.createdAt),
+      } as RunnerDataSource)
+  )
 }
 
 export const addDataSource = (dataSource: RunnerDataSource) => {

@@ -1,23 +1,22 @@
 import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
+  Button,
+  Checkbox,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   Input,
-  FormErrorMessage,
-  Select,
-  Checkbox,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
   ModalFooter,
-  Button,
+  ModalHeader,
+  ModalOverlay,
+  Select,
   Text,
-  Box,
 } from "@chakra-ui/react"
 import { useRef } from "react"
-import { Form, Field } from "react-final-form"
+import { Field, Form } from "react-final-form"
 import { RunnerDataSourceFormValue } from "types"
 import { encryptText } from "../lib/crypto"
 import { addDataSource, RunnerDataSource } from "../lib/dataSourceStorage"
@@ -39,8 +38,13 @@ export const RunnerDataSourceModal = ({
   const onSubmitDataSource = async (values: RunnerDataSourceFormValue) => {
     const publicKeyJwt: JsonWebKey = JSON.parse(process.env.NEXT_PUBLIC_PUBLIC_KEY_JWK!)
     const encryptedBody = await encryptText(JSON.stringify(values), publicKeyJwt)
-    const newDataSource = {
-      name: values.dataSourceName,
+    const newDataSource: RunnerDataSource = {
+      type: values.type,
+      host: values.host,
+      port: values.port,
+      username: values.username,
+      database: values.database,
+      dataSourceName: values.dataSourceName,
       encryptedBody,
       createdAt: new Date(),
     }
@@ -157,7 +161,7 @@ export const RunnerDataSourceModal = ({
                 <Text fontSize="xs" style={{ textWrap: "balance" } as any}>
                   * This data source will be encrypted and stored in your browser.
                 </Text>
-                <Button colorScheme="blue" mr={3} type="submit">
+                <Button colorScheme="teal" mr={3} type="submit">
                   Save
                 </Button>
                 <Button onClick={onClose}>Cancel</Button>

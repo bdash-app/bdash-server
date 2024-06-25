@@ -18,6 +18,7 @@ declare module "blitz" {
 }
 export type RunnerDataSourceFormValue = {
   dataSourceName: string
+  type: string
   host: string
   port: number
   username: string
@@ -26,9 +27,17 @@ export type RunnerDataSourceFormValue = {
   ssl: boolean
 }
 
-export type QueryResultValue = string | number | boolean | null
+export type QueryResultValue = string | number
 export type QueryResult = {
   columns: string[]
   rows: QueryResultValue[][]
   error: string | null
+}
+
+export type ChartType = {
+  type: "line" | "scatter" | "bar" | "area" | "pie"
+  xColumn: string
+  yColumns: Array<string>
+  groupColumns: Array<string>
+  stacking: 0 | string
 }

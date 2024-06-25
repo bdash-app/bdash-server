@@ -30,6 +30,7 @@
     "@emotion/styled": "11.9.3",
     "@prisma/client": "3.16.0-integration-tmp-revert-node14.1",
     "blitz": "0.45.4",
+    "chakra-react-select": "4.8.0",
     "date-fns": "2.28.0",
     "final-form": "4.20.7",
     "framer-motion": "3.10.6",
