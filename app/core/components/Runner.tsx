@@ -3,6 +3,7 @@ import {
   Button,
   Heading,
   HStack,
+  Kbd,
   Select,
   Tab,
   TabList,
@@ -53,15 +54,37 @@ export const Runner = () => {
   const onChangeQuery = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setIsQueryEmpty(event.target.value.length === 0)
   }
-  const onClickExecute = async () => {
+  const onClickExecute = useCallback(async () => {
     const currentQuery = textAreaRef.current?.value
-    if (currentQuery === undefined || currentQuery.length === 0 || selectedDataSource === null)
+    if (
+      isLoading ||
+      currentQuery === undefined ||
+      currentQuery.length === 0 ||
+      selectedDataSource === null
+    )
       return
     await executeQueryMutation({
       body: currentQuery,
       dataSource: selectedDataSource,
     })
-  }
+  }, [executeQueryMutation, isLoading, selectedDataSource])
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      const isCommandEnter = event.metaKey && event.key === "Enter"
+      const isCtrlEnter = event.ctrlKey && event.key === "Enter"
+
+      if (isCommandEnter || isCtrlEnter) {
+        event.preventDefault()
+        onClickExecute()
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown)
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown)
+    }
+  }, [onClickExecute])
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -142,15 +165,17 @@ export const Runner = () => {
             minHeight="30vh"
           />
           {data === undefined ? (
-            <Button
-              colorScheme="teal"
-              isLoading={isLoading}
-              isDisabled={!isExecutable}
-              mr={3}
-              onClick={onClickExecute}
-            >
-              Run
-            </Button>
+            <HStack>
+              <Button
+                colorScheme="teal"
+                isLoading={isLoading}
+                isDisabled={!isExecutable}
+                mr={3}
+                onClick={onClickExecute}
+              >
+                Run
+              </Button>
+            </HStack>
           ) : (
             <HStack gap="2">
               <Button
