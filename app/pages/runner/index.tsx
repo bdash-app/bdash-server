@@ -19,6 +19,11 @@ const RunnerPage = () => {
 
 // To avoid treating this as a static page. Plotly.js can be loaded only on browser, so rendering is always failed in build time.
 export async function getServerSideProps() {
+  if (!process.env.PRIVATE_KEY_JWK) {
+    return {
+      notFound: true,
+    }
+  }
   return {
     props: {},
   }

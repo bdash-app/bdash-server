@@ -11,6 +11,13 @@ import { useQueryErrorResetBoundary } from "react-query"
 import LoginForm from "app/core/components/LoginForm"
 import { ChakraProvider } from "@chakra-ui/react"
 import { extendTheme } from "@chakra-ui/react"
+import { createContext } from "react"
+
+type AppContextType = {
+  isRunnerAvailable: boolean
+}
+const contextValue = { isRunnerAvailable: !!process.env.NEXT_PUBLIC_PUBLIC_KEY_JWK }
+export const AppContext = createContext<AppContextType>(contextValue)
 
 export default function App({ Component, pageProps }: AppProps) {
   const getLayout = Component.getLayout || ((page) => page)
@@ -24,7 +31,9 @@ export default function App({ Component, pageProps }: AppProps) {
         resetKeys={[router.asPath]}
         onReset={reset}
       >
-        {getLayout(<Component {...pageProps} />)}
+        <AppContext.Provider value={contextValue}>
+          {getLayout(<Component {...pageProps} />)}
+        </AppContext.Provider>
       </ErrorBoundary>
     </ChakraProvider>
   )

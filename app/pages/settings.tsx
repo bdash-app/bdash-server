@@ -21,7 +21,8 @@ import { deleteDataSource, getDataSources, RunnerDataSource } from "app/core/lib
 import updateUser from "app/users/mutations/updateUser"
 import { Head, Link, useMutation } from "blitz"
 import { format } from "date-fns"
-import React, { Suspense, useCallback, useEffect, useState } from "react"
+import React, { Suspense, useCallback, useContext, useEffect, useState } from "react"
+import { AppContext } from "./_app"
 
 const UserInfo = () => {
   const currentUser = useCurrentUser()
@@ -63,6 +64,8 @@ const UserInfo = () => {
     setDataSources(getDataSources())
   }
 
+  const { isRunnerAvailable } = useContext(AppContext)
+
   return (
     <VStack align="center">
       <Avatar size="lg" src={currentUser?.icon} />
@@ -100,53 +103,61 @@ const UserInfo = () => {
         </Heading>
         <CopyableText text={`${window.location.protocol}//${window.location.host}/`} />
       </VStack>
-      <VStack align="flex-start" width={{ base: 300, md: 500 }}>
-        <Heading as="h2" fontSize="2xl" marginTop={3}>
-          Runner
-        </Heading>
-        <Text>
-          Your data sources used in{" "}
-          <Text as="span" color="teal">
-            <Link href="/runner">Runner</Link>
-          </Text>{" "}
-          page. These are encrypted and stored in your browser.
-        </Text>
-        <VStack bg="white" borderRadius="xl" align="stretch" width="100%">
-          {dataSources.map((dataSource) => {
-            const createdAtString = format(dataSource.createdAt, "(yyyy-MM-dd)")
-            return (
-              <HStack
-                key={dataSource.dataSourceName}
-                justifyContent="space-between"
-                alignItems="center"
-                paddingInline="4"
-                paddingBlockStart="2"
-              >
-                <HStack>
-                  <Text>{dataSource.dataSourceName}</Text>
-                  <Text fontSize="sm" color="gray.500">
-                    {createdAtString}
-                  </Text>
-                </HStack>
-                <Button
-                  colorScheme="red"
-                  size="xs"
-                  variant="outline"
-                  onClick={() => {
-                    onClickDeleteDataSource(dataSource)
-                  }}
-                >
-                  Delete
-                </Button>
-              </HStack>
-            )
-          })}
-          <Button color="gray.600" leftIcon={<AddIcon />} variant="ghost" onClick={onOpen}>
-            Add
-          </Button>
-        </VStack>
-      </VStack>
-      <RunnerDataSourceModal isOpen={isOpen} onClose={onClose} onAddDataSource={onAddDataSource} />
+      {isRunnerAvailable && (
+        <>
+          <VStack align="flex-start" width={{ base: 300, md: 500 }}>
+            <Heading as="h2" fontSize="2xl" marginTop={3}>
+              Runner
+            </Heading>
+            <Text>
+              Your data sources used in{" "}
+              <Text as="span" color="teal">
+                <Link href="/runner">Runner</Link>
+              </Text>{" "}
+              page. These are encrypted and stored in your browser.
+            </Text>
+            <VStack bg="white" borderRadius="xl" align="stretch" width="100%">
+              {dataSources.map((dataSource) => {
+                const createdAtString = format(dataSource.createdAt, "(yyyy-MM-dd)")
+                return (
+                  <HStack
+                    key={dataSource.dataSourceName}
+                    justifyContent="space-between"
+                    alignItems="center"
+                    paddingInline="4"
+                    paddingBlockStart="2"
+                  >
+                    <HStack>
+                      <Text>{dataSource.dataSourceName}</Text>
+                      <Text fontSize="sm" color="gray.500">
+                        {createdAtString}
+                      </Text>
+                    </HStack>
+                    <Button
+                      colorScheme="red"
+                      size="xs"
+                      variant="outline"
+                      onClick={() => {
+                        onClickDeleteDataSource(dataSource)
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  </HStack>
+                )
+              })}
+              <Button color="gray.600" leftIcon={<AddIcon />} variant="ghost" onClick={onOpen}>
+                Add
+              </Button>
+            </VStack>
+          </VStack>
+          <RunnerDataSourceModal
+            isOpen={isOpen}
+            onClose={onClose}
+            onAddDataSource={onAddDataSource}
+          />
+        </>
+      )}
     </VStack>
   )
 }

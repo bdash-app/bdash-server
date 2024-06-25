@@ -1,12 +1,14 @@
 import { useRouter, useRouterQuery } from "blitz"
 import { Box, Flex, Heading, Link, HStack, Text, Image, Button } from "@chakra-ui/react"
-import React, { Suspense } from "react"
+import React, { Suspense, useContext } from "react"
 import { LoggedInUser } from "./LoggedInUser"
 import { SearchForm } from "./SearchForm"
+import { AppContext } from "app/pages/_app"
 
 export const NavigationHeader: React.FC = () => {
   const query = useRouterQuery()
   const router = useRouter()
+  const { isRunnerAvailable } = useContext(AppContext)
   return (
     <Box bg="white">
       <Flex
@@ -36,11 +38,13 @@ export const NavigationHeader: React.FC = () => {
           </Heading>
         </Link>
         <SearchForm w={500} keyword={query["q"]?.toString()} />
-        <Link href="/runner">
-          <Button colorScheme="teal" variant="outline" size={{ base: "sm", md: "md" }}>
-            Runner
-          </Button>
-        </Link>
+        {isRunnerAvailable && (
+          <Link href="/runner">
+            <Button colorScheme="teal" variant="outline" size={{ base: "sm", md: "md" }}>
+              Runner
+            </Button>
+          </Link>
+        )}
         <Box flex="auto" textAlign="right">
           <Suspense fallback={null}>
             <LoggedInUser />
