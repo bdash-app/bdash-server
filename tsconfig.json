@@ -17,7 +17,10 @@
     "jsx": "preserve",
     "incremental": true,
     "tsBuildInfoFile": ".tsbuildinfo",
-    "paths": { "plotly.js-basic-dist-min": ["node_modules/@types/plotly.js"] }
+    "paths": {
+      "plotly.js-basic-dist-min": ["node_modules/@types/plotly.js"],
+      "react": ["node_modules/@types/react"]
+    }
   },
   "exclude": ["node_modules", "**/*.e2e.ts", "cypress"],
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "scripts/generateKey.js"]

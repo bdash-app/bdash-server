@@ -27,7 +27,7 @@ export const SearchForm: React.FC<Props> = ({ keyword, ...layoutProps }) => {
               setInputValue(event.target.value)
             }}
           />
-          <Button mt={4} colorScheme="teal" type="submit" size={{ base: "sm", md: "md" }}>
+          <Button colorScheme="teal" type="submit" size={{ base: "sm", md: "md" }}>
             Search
           </Button>
         </HStack>
