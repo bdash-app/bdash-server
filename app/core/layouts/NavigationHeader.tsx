@@ -8,7 +8,7 @@ import { AppContext } from "app/pages/_app"
 export const NavigationHeader: React.FC = () => {
   const query = useRouterQuery()
   const router = useRouter()
-  const { isRunnerAvailable } = useContext(AppContext)
+  const { publicKeyJwk } = useContext(AppContext)
   return (
     <Box bg="white">
       <Flex
@@ -38,7 +38,7 @@ export const NavigationHeader: React.FC = () => {
           </Heading>
         </Link>
         <SearchForm w={500} keyword={query["q"]?.toString()} />
-        {isRunnerAvailable && (
+        {publicKeyJwk !== null && (
           <Link href="/runner">
             <Button colorScheme="teal" variant="outline" size={{ base: "sm", md: "md" }}>
               Runner

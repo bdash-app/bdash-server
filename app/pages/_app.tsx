@@ -5,6 +5,7 @@ import {
   AuthenticationError,
   AuthorizationError,
   ErrorFallbackProps,
+  useQuery,
 } from "blitz"
 import { ErrorBoundary } from "react-error-boundary"
 import { useQueryErrorResetBoundary } from "react-query"
@@ -12,17 +13,18 @@ import LoginForm from "app/core/components/LoginForm"
 import { ChakraProvider } from "@chakra-ui/react"
 import { extendTheme } from "@chakra-ui/react"
 import { createContext } from "react"
+import getPublicKeyJwk from "app/users/queries/getPublicKeyJwk"
 
 type AppContextType = {
-  isRunnerAvailable: boolean
+  publicKeyJwk: JsonWebKey | null
 }
-const contextValue = { isRunnerAvailable: !!process.env.NEXT_PUBLIC_PUBLIC_KEY_JWK }
-export const AppContext = createContext<AppContextType>(contextValue)
+export const AppContext = createContext<AppContextType>({ publicKeyJwk: null })
 
 export default function App({ Component, pageProps }: AppProps) {
   const getLayout = Component.getLayout || ((page) => page)
   const router = useRouter()
   const { reset } = useQueryErrorResetBoundary()
+  const [publicKeyJwk] = useQuery(getPublicKeyJwk, null, { suspense: false, enabled: true })
 
   return (
     <ChakraProvider theme={theme}>
@@ -31,7 +33,7 @@ export default function App({ Component, pageProps }: AppProps) {
         resetKeys={[router.asPath]}
         onReset={reset}
       >
-        <AppContext.Provider value={contextValue}>
+        <AppContext.Provider value={{ publicKeyJwk: publicKeyJwk ?? null }}>
           {getLayout(<Component {...pageProps} />)}
         </AppContext.Provider>
       </ErrorBoundary>

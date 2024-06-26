@@ -64,7 +64,7 @@ const UserInfo = () => {
     setDataSources(getDataSources())
   }
 
-  const { isRunnerAvailable } = useContext(AppContext)
+  const { publicKeyJwk } = useContext(AppContext)
 
   return (
     <VStack align="center">
@@ -103,7 +103,7 @@ const UserInfo = () => {
         </Heading>
         <CopyableText text={`${window.location.protocol}//${window.location.host}/`} />
       </VStack>
-      {isRunnerAvailable && (
+      {publicKeyJwk !== null && (
         <>
           <VStack align="flex-start" width={{ base: 300, md: 500 }}>
             <Heading as="h2" fontSize="2xl" marginTop={3}>

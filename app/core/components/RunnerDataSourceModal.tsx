@@ -15,11 +15,12 @@ import {
   Select,
   Text,
 } from "@chakra-ui/react"
-import { useRef } from "react"
+import { useContext, useRef } from "react"
 import { Field, Form } from "react-final-form"
 import { RunnerDataSourceFormValue } from "types"
 import { encryptText } from "../lib/crypto"
 import { addDataSource, RunnerDataSource } from "../lib/dataSourceStorage"
+import { AppContext } from "app/pages/_app"
 
 export const RunnerDataSourceModal = ({
   isOpen,
@@ -34,10 +35,11 @@ export const RunnerDataSourceModal = ({
   const finalRef = useRef(null)
   const required = (value) => (value ? undefined : "Required")
   const mustBeNumber = (value) => (isNaN(value) ? "Must be a number" : undefined)
+  const { publicKeyJwk } = useContext(AppContext)
 
   const onSubmitDataSource = async (values: RunnerDataSourceFormValue) => {
-    const publicKeyJwt: JsonWebKey = JSON.parse(process.env.NEXT_PUBLIC_PUBLIC_KEY_JWK!)
-    const encryptedBody = await encryptText(JSON.stringify(values), publicKeyJwt)
+    if (publicKeyJwk == null) return
+    const encryptedBody = await encryptText(JSON.stringify(values), publicKeyJwk)
     const newDataSource: RunnerDataSource = {
       type: values.type,
       host: values.host,
