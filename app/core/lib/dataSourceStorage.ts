@@ -23,7 +23,7 @@ export const getDataSources = (): RunnerDataSource[] => {
 
 export const addDataSource = (dataSource: RunnerDataSource) => {
   const dataSources = getDataSources()
-  dataSources.push(dataSource)
+  dataSources.unshift(dataSource)
   window.localStorage.setItem("dataSources", JSON.stringify(dataSources))
 }
 

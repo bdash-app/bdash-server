@@ -31,6 +31,7 @@ const UserInfo = () => {
   const [dataSources, setDataSources] = useState<RunnerDataSource[]>([])
   const onAddDataSource = () => {
     setDataSources(getDataSources())
+    onClose()
   }
 
   const { isOpen, onOpen, onClose } = useDisclosure()

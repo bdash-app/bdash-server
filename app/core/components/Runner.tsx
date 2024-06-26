@@ -3,7 +3,6 @@ import {
   Button,
   Heading,
   HStack,
-  Kbd,
   Select,
   Tab,
   TabList,
