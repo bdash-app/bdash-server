@@ -1,4 +1,6 @@
 import {
+  Alert,
+  AlertIcon,
   Box,
   Button,
   Heading,
@@ -46,7 +48,8 @@ export const Runner = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const [executeQueryMutation, { isLoading, data }] = useMutation(executeQuery)
+  const [executeQueryMutation, { isLoading, data, isError, error }] = useMutation(executeQuery)
+
   const [isQueryEmpty, setIsQueryEmpty] = useState(true)
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
   const isExecutable = !isQueryEmpty && selectedDataSource !== null
@@ -65,7 +68,7 @@ export const Runner = () => {
     await executeQueryMutation({
       body: currentQuery,
       dataSource: selectedDataSource,
-    })
+    }).catch((e) => console.error(e))
   }, [executeQueryMutation, isLoading, selectedDataSource])
 
   useEffect(() => {
@@ -109,6 +112,7 @@ export const Runner = () => {
     currentChart.current = chart
   }
 
+  const isSharable = data && !data.error
   const [createQueryMutation, { isLoading: isSharing }] = useMutation(createBdashQuery)
   const onClickShare = useCallback(
     async (title: string) => {
@@ -185,44 +189,51 @@ export const Runner = () => {
               >
                 Re-run
               </Button>
-              <RunnerShareModal
-                modalTitle="Share on Bdash Server"
-                openButtonLabel="Share"
-                primaryButtonLabel="Share"
-                onClickPrimaryButton={onClickShare}
-                textFieldLabel="Title"
-                textFieldPlaceholder="New Query"
-                initialText="New Query"
-                isLoading={isSharing}
-              />
+              {isSharable && (
+                <RunnerShareModal
+                  modalTitle="Share on Bdash Server"
+                  openButtonLabel="Share"
+                  primaryButtonLabel="Share"
+                  onClickPrimaryButton={onClickShare}
+                  textFieldLabel="Title"
+                  textFieldPlaceholder="New Query"
+                  initialText="New Query"
+                  isLoading={isSharing}
+                />
+              )}
             </HStack>
           )}
         </VStack>
-        {data && (
-          <Box mt={4} alignSelf="stretch">
-            <Heading as="h3" size="sm" mb="2">
-              Result
-            </Heading>
-            <Tabs backgroundColor="white" borderRadius="lg">
-              <TabList>
-                <Tab>Table</Tab>
-                <Tab>Chart</Tab>
-              </TabList>
-              <TabPanels>
-                <TabPanel>
-                  {data.error ? (
-                    <Text color="red">{data.error}</Text>
-                  ) : (
+        <Box mt={4} alignSelf="stretch">
+          <Heading as="h3" size="sm" mb="2">
+            Result
+          </Heading>
+          {data?.error || isError ? (
+            <Alert status="error">
+              <AlertIcon />
+              {data?.error ??
+                (error as any)?.message ??
+                ((error as any)?.statusCode ? `Error ${(error as any)?.statusCode}` : "Error")}
+            </Alert>
+          ) : (
+            data && (
+              <Tabs backgroundColor="white" borderRadius="lg">
+                <TabList>
+                  <Tab>Table</Tab>
+                  <Tab>Chart</Tab>
+                </TabList>
+                <TabPanels>
+                  <TabPanel>
                     <QueryResultTable queryResult={data} maxDisplayRows={MAX_DISPLAY_ROWS} />
-                  )}
-                </TabPanel>
-                <TabPanel>
-                  <QueryResultChartEdit query={data} onChangeChart={onChangeChart} />
-                </TabPanel>
-              </TabPanels>
-            </Tabs>
-          </Box>
-        )}
+                  </TabPanel>
+                  <TabPanel>
+                    <QueryResultChartEdit query={data} onChangeChart={onChangeChart} />
+                  </TabPanel>
+                </TabPanels>
+              </Tabs>
+            )
+          )}
+        </Box>
       </VStack>
       <RunnerDataSourceModal isOpen={isOpen} onClose={onClose} onAddDataSource={onAddDataSource} />
     </VStack>

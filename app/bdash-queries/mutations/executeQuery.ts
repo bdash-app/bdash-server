@@ -19,23 +19,27 @@ export default resolver.pipe(
     const decrypted: RunnerDataSourceFormValue = JSON.parse(
       await decryptText(dataSource.encryptedBody, privateKey)
     )
-    const client = new pg.Client({
-      host: decrypted.host,
-      port: decrypted.port,
-      user: decrypted.username,
-      password: decrypted.password,
-      database: decrypted.database,
-      ssl: decrypted.ssl ? { rejectUnauthorized: false } : undefined,
-    })
-    await client.connect()
-    try {
-      const result = await client.query({ text: body, rowMode: "array" })
-      const { rows, fields } = result
-      return { columns: fields.map((f) => f.name), rows, error: null }
-    } catch (error) {
-      return { columns: [], rows: [], error: error.message }
-    } finally {
-      client.end()
+    if (decrypted.type == "postgres") {
+      const client = new pg.Client({
+        host: decrypted.host,
+        port: decrypted.port,
+        user: decrypted.username,
+        password: decrypted.password,
+        database: decrypted.database,
+        ssl: decrypted.ssl ? { rejectUnauthorized: false } : undefined,
+      })
+      await client.connect()
+      try {
+        const result = await client.query({ text: body, rowMode: "array" })
+        const { rows, fields } = result
+        return { columns: fields.map((f) => f.name), rows, error: null }
+      } catch (error) {
+        return { columns: [], rows: [], error: error.message }
+      } finally {
+        client.end()
+      }
+    } else {
+      return { columns: [], rows: [], error: `Unsupported data source type: ${decrypted.type}` }
     }
   }
 )
