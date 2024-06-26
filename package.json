@@ -14,7 +14,7 @@
     "test:watch": "jest --watch"
   },
   "engines": {
-    "node": "16"
+    "node": "18"
   },
   "prisma": {
     "schema": "db/schema.prisma"
