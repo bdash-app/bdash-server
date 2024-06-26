@@ -128,7 +128,7 @@ export const RunnerDataSourceModal = ({
                   {({ input, meta }) => (
                     <FormControl mt={4} isInvalid={meta.error && meta.touched}>
                       <FormLabel>Password</FormLabel>
-                      <Input {...input} placeholder="" />
+                      <Input {...input} placeholder="" type="password" />
                       {meta.error && meta.touched && (
                         <FormErrorMessage>{meta.error}</FormErrorMessage>
                       )}
