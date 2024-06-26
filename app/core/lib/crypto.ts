@@ -1,8 +1,10 @@
-export const decryptText = async (encryptedText: string, privateKeyJwk: JsonWebKey) => {
-  // @ts-ignore
-  const subtle = globalThis.crypto.subtle ?? globalThis.crypto.webcrypto.subtle
+const getSubtle = async () => {
+  return globalThis.crypto?.subtle ?? (await import("crypto")).subtle
+}
 
-  const privateKey = await importRsaKey(privateKeyJwk, ["decrypt"])
+export const decryptText = async (encryptedText: string, privateKeyJwk: JsonWebKey) => {
+  const subtle = await getSubtle()
+  const privateKey = await importRsaKey(subtle, privateKeyJwk, ["decrypt"])
   const decoder = new TextDecoder()
   const data = Buffer.from(encryptedText, "base64")
   const decrypted = await subtle.decrypt(
@@ -16,10 +18,8 @@ export const decryptText = async (encryptedText: string, privateKeyJwk: JsonWebK
 }
 
 export const encryptText = async (text: string, publicKeyJwk: JsonWebKey) => {
-  // @ts-ignore
-  const subtle = globalThis.crypto.subtle ?? globalThis.crypto.webcrypto.subtle
-
-  const publicKey = await importRsaKey(publicKeyJwk, ["encrypt"])
+  const subtle = await getSubtle()
+  const publicKey = await importRsaKey(subtle, publicKeyJwk, ["encrypt"])
   const encoder = new TextEncoder()
   const data = encoder.encode(text)
   const encrypted = await subtle.encrypt(
@@ -32,10 +32,11 @@ export const encryptText = async (text: string, publicKeyJwk: JsonWebKey) => {
   return Buffer.from(encrypted).toString("base64")
 }
 
-const importRsaKey = async (jwk: JsonWebKey, usage: KeyUsage[]): Promise<CryptoKey> => {
-  // @ts-ignore
-  const subtle = globalThis.crypto.subtle ?? globalThis.crypto.webcrypto.subtle
-
+const importRsaKey = async (
+  subtle: SubtleCrypto,
+  jwk: JsonWebKey,
+  usage: KeyUsage[]
+): Promise<CryptoKey> => {
   return subtle.importKey(
     "jwk",
     jwk,
