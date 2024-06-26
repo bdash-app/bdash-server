@@ -205,9 +205,11 @@ export const Runner = () => {
           )}
         </VStack>
         <Box mt={4} alignSelf="stretch">
-          <Heading as="h3" size="sm" mb="2">
-            Result
-          </Heading>
+          {(data || isError) && (
+            <Heading as="h3" size="sm" mb="2">
+              Result
+            </Heading>
+          )}
           {data?.error || isError ? (
             <Alert status="error">
               <AlertIcon />

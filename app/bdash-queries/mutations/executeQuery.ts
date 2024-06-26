@@ -28,8 +28,8 @@ export default resolver.pipe(
         database: decrypted.database,
         ssl: decrypted.ssl ? { rejectUnauthorized: false } : undefined,
       })
-      await client.connect()
       try {
+        await client.connect()
         const result = await client.query({ text: body, rowMode: "array" })
         const { rows, fields } = result
         return { columns: fields.map((f) => f.name), rows, error: null }
