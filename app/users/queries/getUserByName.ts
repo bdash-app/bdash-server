@@ -11,7 +11,6 @@ export default resolver.pipe(resolver.zod(GetUser), resolver.authorize(), async 
   // TODO: in multi-tenant app, you must add validation to ensure correct tenant
   const user = await db.user.findUnique({
     where: { name },
-    include: { BdashQuery: { orderBy: { createdAt: "desc" } } },
   })
 
   if (!user) throw new NotFoundError()
