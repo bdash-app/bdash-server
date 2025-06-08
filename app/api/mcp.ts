@@ -37,7 +37,7 @@ ${query.query_sql}
 }
 
 const mcpServer = new McpServer(
-  { name: "bdash-server", version: "1.0.0" },
+  { name: "Bdash Server", version: "1.0.0" },
   {
     capabilities: {
       tools: {
