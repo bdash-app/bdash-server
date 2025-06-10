@@ -14,7 +14,7 @@
     "test:watch": "jest --watch"
   },
   "engines": {
-    "node": "18"
+    "node": "22"
   },
   "prisma": {
     "schema": "db/schema.prisma"
@@ -58,6 +58,7 @@
   },
   "private": true,
   "volta": {
-    "node": "18.20.3"
+    "node": "22.16.0",
+    "yarn": "1.22.22"
   }
 }
