@@ -2,10 +2,11 @@
   "name": "bdash-server",
   "version": "1.0.0",
   "scripts": {
-    "dev": "docker compose -f docker-compose-dev.yml up -d && NODE_OPTIONS='--openssl-legacy-provider' blitz dev",
+    "dev": "NODE_OPTIONS='--openssl-legacy-provider' blitz dev",
     "build": "prisma generate --schema db/schema.prisma && NODE_OPTIONS='--openssl-legacy-provider' blitz build",
     "start": "NODE_OPTIONS='--openssl-legacy-provider' blitz start",
     "start:production": "NODE_OPTIONS='--openssl-legacy-provider' blitz start --port $PORT",
+    "db:push": "blitz prisma db push",
     "db:migrate": "blitz prisma migrate dev --preview-feature",
     "db:migrate:production": "blitz prisma migrate deploy --preview-feature",
     "studio": "blitz prisma studio",
