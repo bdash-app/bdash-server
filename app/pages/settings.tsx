@@ -12,6 +12,8 @@ import {
   HStack,
   Heading,
   Input,
+  Textarea,
+  Code,
 } from "@chakra-ui/react"
 import updateUser from "app/users/mutations/updateUser"
 import { EditableControls } from "app/core/components/EditableControls"
@@ -42,6 +44,19 @@ const UserInfo = () => {
   )
 
   const baseUrl = `${window.location.protocol}//${window.location.host}/`
+
+  const mcpConfig = {
+    url: `${baseUrl}api/mcp`,
+    headers: {
+      Authorization: `Bearer ${currentUser?.accessToken}`,
+    },
+  }
+
+  const mcpJson = {
+    mcpServers: {
+      "Bdash Server": mcpConfig,
+    },
+  }
 
   return (
     <VStack>
@@ -79,7 +94,20 @@ const UserInfo = () => {
               MCP Server
             </Heading>
             <Text>You can use the MCP server to search for queries on Bdash Server.</Text>
-            <AddToCursor baseUrl={baseUrl} accessToken={currentUser.accessToken} />
+            For Cursor:
+            <AddToCursor mcpConfig={mcpConfig} />
+            <Code>mcp.json</Code>
+            <Textarea
+              value={JSON.stringify(mcpJson, null, 2)}
+              readOnly={true}
+              bg="gray.700"
+              color="white"
+              borderRadius={6}
+              size="sm"
+              width={{ base: 300, md: 500 }}
+              height="12lh"
+              wordBreak="break-all"
+            />
           </>
         )}
       </VStack>
@@ -106,18 +134,11 @@ const CopyableText = ({ text }: { text: string }) => {
   )
 }
 
-const AddToCursor = ({ baseUrl, accessToken }: { baseUrl: string; accessToken: string }) => {
+const AddToCursor = ({ mcpConfig }: { mcpConfig: Record<string, any> }) => {
   return (
     <a
       href={`https://cursor.com/install-mcp?name=Bdash%20Server&config=${encodeURIComponent(
-        btoa(
-          JSON.stringify({
-            url: `${baseUrl}api/mcp`,
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          })
-        )
+        btoa(JSON.stringify(mcpConfig))
       )}`}
     >
       <Image
