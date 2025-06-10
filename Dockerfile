@@ -1,4 +1,4 @@
-FROM node:18-buster as base
+FROM node:22 as base
 WORKDIR /app
 COPY package.json yarn.lock .npmrc ./
 
