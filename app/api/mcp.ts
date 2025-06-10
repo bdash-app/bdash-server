@@ -64,6 +64,7 @@ mcpServer.tool(
     }
 
     try {
+      const limit = 10
       const likeArg = `%${keyword}%`
 
       const searchResults = await db.$queryRaw<BdashQueryRow[]>`
@@ -83,7 +84,7 @@ mcpServer.tool(
         order by
             updatedAt desc
         limit
-            20
+            ${limit}
         ;`
 
       return {
@@ -124,6 +125,7 @@ const handler: BlitzApiHandler = async (req, res) => {
     try {
       await validateAccessToken(accessToken)
     } catch (error) {
+      console.error("Unauthorized MCP request")
       res.status(401).json({
         jsonrpc: "2.0",
         error: { code: -32000, message: "Unauthorized" },
