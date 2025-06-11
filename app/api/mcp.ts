@@ -3,6 +3,7 @@ import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/
 import { BlitzApiHandler } from "blitz"
 import db, { BdashQuery } from "db"
 import { z } from "zod"
+import { searchBdashQueries } from "app/core/lib/searchBdashQueries"
 
 type BdashQueryRow = Pick<
   BdashQuery,
@@ -65,27 +66,19 @@ mcpServer.tool(
 
     try {
       const limit = 10
-      const likeArg = `%${keyword}%`
 
-      const searchResults = await db.$queryRaw<BdashQueryRow[]>`
-        select
-            id,
-            title,
-            description,
-            query_sql,
-            updatedAt,
-            data_source_info
-        from
-            BdashQuery
-        where
-            title like ${likeArg}
-            or description like ${likeArg}
-            or query_sql like ${likeArg}
-        order by
-            updatedAt desc
+      const searchResults = await searchBdashQueries(
+        keyword,
+        {
+          id: true,
+          title: true,
+          description: true,
+          query_sql: true,
+          updatedAt: true,
+          data_source_info: true,
+        },
         limit
-            ${limit}
-        ;`
+      )
 
       return {
         content: [
@@ -152,6 +145,5 @@ const handler: BlitzApiHandler = async (req, res) => {
     }
   }
 }
-
 
 export default handler

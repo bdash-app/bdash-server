@@ -1,7 +1,10 @@
 import { BlitzApiRequest, BlitzApiResponse } from "blitz"
 import db, { BdashQuery, User } from "db"
+import { searchBdashQueries } from "app/core/lib/searchBdashQueries"
 
-export type SearchBdashQueryResponse = (BdashQuery & { user?: User })[]
+type SearchBdashQueryResult = Pick<BdashQuery, "id" | "id_hash" | "title" | "createdAt" | "userId">
+
+export type SearchBdashQueryResponse = (SearchBdashQueryResult & { user?: User })[]
 
 const searchBdashQuery = async (req: BlitzApiRequest, res: BlitzApiResponse) => {
   const { q: keyword } = req.query
@@ -10,10 +13,19 @@ const searchBdashQuery = async (req: BlitzApiRequest, res: BlitzApiResponse) => 
     return
   }
 
-  const likeArg = `%${keyword}%`
-  const searchResults = await db.$queryRaw<
-    BdashQuery[]
-  >`SELECT id,id_hash,title,createdAt,userId FROM BdashQuery WHERE title LIKE ${likeArg} OR description LIKE ${likeArg} OR query_sql LIKE ${likeArg};`
+  const sendResponse = (data: SearchBdashQueryResponse) => {
+    res.status(200)
+    res.json(data)
+  }
+
+  const searchResults = await searchBdashQueries(keyword, {
+    id: true,
+    id_hash: true,
+    title: true,
+    createdAt: true,
+    userId: true,
+  })
+
   const users = await db.user.findMany({
     where: { id: { in: searchResults.map((query) => query.userId) } },
     select: { id: true, name: true, icon: true },
@@ -26,9 +38,7 @@ const searchBdashQuery = async (req: BlitzApiRequest, res: BlitzApiResponse) => 
     return bdashQueryWithUser
   })
 
-  res.setHeader("Content-Type", "application/json")
-  res.status(200)
-  res.send(JSON.stringify(bdashQueries))
+  sendResponse(bdashQueries)
 }
 
 export default searchBdashQuery
