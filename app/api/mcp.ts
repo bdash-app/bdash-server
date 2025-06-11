@@ -153,18 +153,5 @@ const handler: BlitzApiHandler = async (req, res) => {
   }
 }
 
-process.on("SIGINT", async () => {
-  console.info("Shutting down server...")
-  try {
-    console.info("Closing transport")
-    await transport.close()
-  } catch (error) {
-    console.error("Error closing transport:", error)
-  }
-
-  await mcpServer.close()
-  console.info("Server shutdown complete")
-  process.exit(0)
-})
 
 export default handler
