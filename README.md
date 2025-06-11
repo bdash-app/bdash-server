@@ -2,6 +2,10 @@
 
 This is a web application for sharing SQL queries and data analysis results from [Bdash](https://github.com/bdash-app/bdash).
 
+Bdash Server is powered by [Blitz.js](https://github.com/blitz-js/blitz) using [Next.js](https://nextjs.org/) and [Prisma](https://www.prisma.io/).
+
+Related blog post: https://techlife.cookpad.com/entry/2021/06/11/120000
+
 ## Key Features
 
 - Share SQL queries, query results, and charts from the Bdash client as a web page
@@ -10,11 +14,21 @@ This is a web application for sharing SQL queries and data analysis results from
 
 ![screenshot](https://user-images.githubusercontent.com/1413408/115130638-34d03e80-a02c-11eb-905c-c96154a74d67.png)
 
-Bdash Server is powered by [Blitz.js](https://github.com/blitz-js/blitz) using [Next.js](https://nextjs.org/) and [Prisma](https://www.prisma.io/).
+## MCP Server
+
+`/api/mcp` is an endpoint that provides MCP server (Streamable HTTP Transport).
+
+It provides a tool called `search_bdash_queries` that allows keyword searching of queries.
+
+Below is an example of Cursor's `mcp.json` configuration. You can also add this configuration using the "Add to Cursor" button in the settings screen.
+
+<p><img width="1512" alt="mcp1" src="https://github.com/user-attachments/assets/7f904c1d-872d-450a-b3f7-c534cbe10c42" /></p>
+
+<p><img width="587" alt="mcp2" src="https://github.com/user-attachments/assets/237783c8-de79-452d-8eb2-17f6de8d9ec2" /></p>
 
 ## Setup
 
-### Set Environment Variables
+### 1. Set Environment Variables
 
 Create a local environment file by copying the example:
 
@@ -22,7 +36,7 @@ Create a local environment file by copying the example:
 $ cp .env.local.example .env.local
 ```
 
-### Configure Google OAuth
+### 2. Configure Google OAuth
 
 Add your `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` for authentication.
 
@@ -32,7 +46,7 @@ Configure your OAuth settings:
 - Set `http://localhost:3000` as _Authorized JavaScript origins_
 - Set `http://localhost:3000/api/auth/google/callback` as _Authorized redirect URIs_
 
-### Setup Local Database
+### 3. Setup Local Database
 
 Start the Docker containers:
 
@@ -48,18 +62,16 @@ $ yarn db:push
 
 ## Development
 
+Start the Docker containers:
+
+```sh
+$ docker compose -f docker-compose-dev.yml up
+```
+
 Start the development server:
 
 ```sh
 $ yarn dev
-```
-
-## Production Deployment
-
-Run the app container using the production Dockerfile:
-
-```sh
-$ docker compose -f docker-compose-with-app-container.yml up --build
 ```
 
 ## License

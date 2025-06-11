@@ -1,6 +1,6 @@
 import React, { Suspense, useCallback, useState } from "react"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
-import { Head, useMutation } from "blitz"
+import { Head, useMutation, Image } from "blitz"
 import Layout from "app/core/layouts/Layout"
 import {
   VStack,
@@ -12,6 +12,8 @@ import {
   HStack,
   Heading,
   Input,
+  Textarea,
+  Code,
 } from "@chakra-ui/react"
 import updateUser from "app/users/mutations/updateUser"
 import { EditableControls } from "app/core/components/EditableControls"
@@ -41,6 +43,21 @@ const UserInfo = () => {
     [currentUser, updateUserMutation]
   )
 
+  const baseUrl = `${window.location.protocol}//${window.location.host}/`
+
+  const mcpConfig = {
+    url: `${baseUrl}api/mcp`,
+    headers: {
+      Authorization: `Bearer ${currentUser?.accessToken}`,
+    },
+  }
+
+  const mcpJson = {
+    mcpServers: {
+      "Bdash Server": mcpConfig,
+    },
+  }
+
   return (
     <VStack>
       <Avatar size="lg" src={currentUser?.icon} />
@@ -59,10 +76,10 @@ const UserInfo = () => {
         </HStack>
       </Editable>
       <VStack align="flex-start">
-        <Heading as="h2" fontSize="2xl" marginTop={3}>
-          Bdash client config
+        <Heading as="h2" fontSize="2xl" marginTop={4}>
+          Bdash Client Configuration
         </Heading>
-        <Text>Set the following values to Bdash client config.</Text>
+        <Text>Configure your Bdash client with the following values.</Text>
         <Heading as="h3" fontSize="lg">
           Access Token
         </Heading>
@@ -70,7 +87,29 @@ const UserInfo = () => {
         <Heading as="h3" fontSize="lg">
           Bdash Server URL
         </Heading>
-        <CopyableText text={`${window.location.protocol}//${window.location.host}/`} />
+        <CopyableText text={baseUrl} />
+        {currentUser?.accessToken && (
+          <>
+            <Heading as="h2" fontSize="2xl" marginTop={8}>
+              MCP Server
+            </Heading>
+            <Text>You can use the MCP server to search for queries on Bdash Server.</Text>
+            For Cursor:
+            <AddToCursor mcpConfig={mcpConfig} />
+            <Code>mcp.json</Code>
+            <Textarea
+              value={JSON.stringify(mcpJson, null, 2)}
+              readOnly={true}
+              bg="gray.700"
+              color="white"
+              borderRadius={6}
+              size="sm"
+              width={{ base: 300, md: 500 }}
+              height="12lh"
+              wordBreak="break-all"
+            />
+          </>
+        )}
       </VStack>
     </VStack>
   )
@@ -92,6 +131,24 @@ const CopyableText = ({ text }: { text: string }) => {
       onFocus={select}
       onClick={select}
     />
+  )
+}
+
+const AddToCursor = ({ mcpConfig }: { mcpConfig: Record<string, any> }) => {
+  return (
+    <a
+      href={`https://cursor.com/install-mcp?name=Bdash%20Server&config=${encodeURIComponent(
+        btoa(JSON.stringify(mcpConfig))
+      )}`}
+    >
+      <Image
+        src="https://cursor.com/deeplink/mcp-install-dark.svg"
+        alt="Add Bdash Server MCP to Cursor"
+        width="144"
+        height="32"
+        unoptimized
+      />
+    </a>
   )
 }
 
