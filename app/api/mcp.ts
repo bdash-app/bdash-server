@@ -67,7 +67,7 @@ mcpServer.tool(
     try {
       const limit = 10
 
-      const searchResults = await searchBdashQueries<BdashQueryRow>(
+      const searchResults = await searchBdashQueries(
         keyword,
         {
           id: true,

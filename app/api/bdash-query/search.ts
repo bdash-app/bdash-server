@@ -1,14 +1,8 @@
 import { BlitzApiRequest, BlitzApiResponse } from "blitz"
-import db, { User } from "db"
+import db, { BdashQuery, User } from "db"
 import { searchBdashQueries } from "app/core/lib/searchBdashQueries"
 
-type SearchBdashQueryResult = {
-  id: number
-  id_hash: string
-  title: string
-  createdAt: Date
-  userId: number
-}
+type SearchBdashQueryResult = Pick<BdashQuery, "id" | "id_hash" | "title" | "createdAt" | "userId">
 
 export type SearchBdashQueryResponse = (SearchBdashQueryResult & { user?: User })[]
 
@@ -25,7 +19,7 @@ const searchBdashQuery = async (req: BlitzApiRequest, res: BlitzApiResponse) => 
     res.send(JSON.stringify(data))
   }
 
-  const searchResults = await searchBdashQueries<SearchBdashQueryResult>(keyword, {
+  const searchResults = await searchBdashQueries(keyword, {
     id: true,
     id_hash: true,
     title: true,

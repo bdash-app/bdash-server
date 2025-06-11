@@ -1,10 +1,10 @@
-import db from "db"
+import db, { Prisma } from "db"
 
-export const searchBdashQueries = async <T>(
+export const searchBdashQueries = async <SelectFields extends Prisma.BdashQuerySelect>(
   keyword: string,
-  selectFields: Record<string, boolean>,
+  selectFields: SelectFields,
   limit?: number
-): Promise<T[]> => {
+): Promise<Prisma.BdashQueryGetPayload<{ select: SelectFields }>[]> => {
   const keywords = keyword
     .trim()
     .split(/\s+/)
@@ -33,5 +33,5 @@ export const searchBdashQueries = async <T>(
     ...(limit && { take: limit }),
   })
 
-  return searchResults as T[]
+  return searchResults
 }
