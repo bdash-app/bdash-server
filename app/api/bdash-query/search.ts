@@ -14,9 +14,8 @@ const searchBdashQuery = async (req: BlitzApiRequest, res: BlitzApiResponse) => 
   }
 
   const sendResponse = (data: SearchBdashQueryResponse) => {
-    res.setHeader("Content-Type", "application/json")
     res.status(200)
-    res.send(JSON.stringify(data))
+    res.json(data)
   }
 
   const searchResults = await searchBdashQueries(keyword, {
