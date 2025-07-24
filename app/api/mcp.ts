@@ -111,20 +111,27 @@ const validateAccessToken = async (accessToken: string | undefined): Promise<voi
 }
 
 const handler: BlitzApiHandler = async (req, res) => {
-  console.debug("Received MCP request\n Headers:", req.headers, "\n Body:", req.body)
+  if (req.body.method !== "tools/call") {
+    console.error("Invalid method:", req.body.method)
+    res.status(400).json({
+      jsonrpc: "2.0",
+      error: { code: -32600, message: "Invalid Request" },
+      id: req.body.id || null,
+    })
+    return
+  }
 
-  if (req.body.method === "tools/call") {
-    const accessToken = req.headers.authorization?.split(" ")[1]
-    try {
-      await validateAccessToken(accessToken)
-    } catch (error) {
-      console.error("Unauthorized MCP request")
-      res.status(401).json({
-        jsonrpc: "2.0",
-        error: { code: -32000, message: "Unauthorized" },
-      })
-      return
-    }
+  const accessToken = req.headers.authorization?.split(" ")[1]
+  try {
+    await validateAccessToken(accessToken)
+  } catch (error) {
+    console.error("Unauthorized MCP request")
+    res.status(401).json({
+      jsonrpc: "2.0",
+      error: { code: -32000, message: "Unauthorized" },
+      id: req.body.id || null,
+    })
+    return
   }
 
   try {
@@ -139,7 +146,7 @@ const handler: BlitzApiHandler = async (req, res) => {
           code: -32603,
           message: "Internal server error",
         },
-        id: null,
+        id: req.body.id || null,
       })
       return
     }
