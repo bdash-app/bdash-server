@@ -96,6 +96,8 @@ const UserInfo = () => {
             <Text>You can use the MCP server to search for queries on Bdash Server.</Text>
             For Cursor:
             <AddToCursor mcpConfig={mcpConfig} />
+            For Claude Code:
+            <CopyableText text={`claude mcp add bdash-server https://bdash.ckpd.co/api/mcp -t http -H "Authorization: Bearer ${currentUser?.accessToken}"`} />
             <Code>mcp.json</Code>
             <Textarea
               value={JSON.stringify(mcpJson, null, 2)}
