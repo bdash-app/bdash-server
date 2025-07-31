@@ -94,10 +94,12 @@ async function createServiceKey() {
     }
     console.log(`Created: ${created.createdAt.toISOString()}`)
   } catch (error) {
-    if (error.code === "P2002") {
+    if (error instanceof Error && 'code' in error && error.code === "P2002") {
       console.error("❌ Service key already exists")
-    } else {
+    } else if (error instanceof Error) {
       console.error("❌ Error creating service key:", error.message)
+    } else {
+      console.error("❌ Unknown error occurred")
     }
     process.exit(1)
   } finally {
