@@ -26,7 +26,7 @@ Set the `Authorization` header with either:
 - `Bearer <user_access_token>` - User's access token from the web interface
 - `Bearer <service_key>` - Service key created with the batch script
 
-### Service Key Creation
+### Service Key Management
 
 Create a service key using the batch script:
 
@@ -36,6 +36,13 @@ $ DATABASE_URL=mysql://... npm run task task/create_service_key.ts -- --name "my
 
 # Use specific key with expiration
 $ DATABASE_URL=mysql://... npm run task task/create_service_key.ts -- --name "my-app" --key "your-key" --expires "2025-12-31"
+```
+
+Delete a service key by name:
+
+```sh
+# Delete service key
+$ DATABASE_URL=mysql://... npm run task task/delete_service_key.ts -- --name "my-app"
 ```
 
 ### Configuration
