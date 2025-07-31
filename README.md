@@ -20,6 +20,26 @@ Related blog post: https://techlife.cookpad.com/entry/2021/06/11/120000
 
 It provides a tool called `search_bdash_queries` that allows keyword searching of queries.
 
+### Authentication
+
+Set the `Authorization` header with either:
+- `Bearer <user_access_token>` - User's access token from the web interface
+- `Bearer <service_key>` - Service key created with the batch script
+
+### Service Key Creation
+
+Create a service key using the batch script:
+
+```sh
+# Generate random key
+$ DATABASE_URL=mysql://... npm run task task/create_service_key.ts -- --name "my-app"
+
+# Use specific key with expiration
+$ DATABASE_URL=mysql://... npm run task task/create_service_key.ts -- --name "my-app" --key "your-key" --expires "2025-12-31"
+```
+
+### Configuration
+
 Below is an example of Cursor's `mcp.json` configuration. You can also add this configuration using the "Add to Cursor" button in the settings screen.
 
 <p><img width="1512" alt="mcp1" src="https://github.com/user-attachments/assets/7f904c1d-872d-450a-b3f7-c534cbe10c42" /></p>

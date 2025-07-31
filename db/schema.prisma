@@ -96,3 +96,12 @@ model Favorite {
 
   @@unique([bdashQueryId, userId])
 }
+
+model ServiceKey {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  key       String    @unique
+  name      String
+  expiresAt DateTime?
+}

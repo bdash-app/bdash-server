@@ -12,7 +12,9 @@
     "studio": "blitz prisma studio",
     "lint": "eslint --ignore-path .gitignore --ext .js,.ts,.tsx .",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "task": "tsx",
+    "blitz": "blitz"
   },
   "engines": {
     "node": "22"
@@ -56,6 +58,7 @@
     "prettier-plugin-prisma": "5.0.0",
     "pretty-quick": "3.1.3",
     "preview-email": "3.0.5",
+    "tsx": "4.20.3",
     "typescript": "5.5.2"
   },
   "private": true,

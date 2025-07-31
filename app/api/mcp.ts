@@ -100,10 +100,31 @@ mcpServer.tool(
 
 mcpServer.connect(transport)
 
+const validateServiceKey = async (serviceKey: string): Promise<string | null> => {
+  const service = await db.serviceKey.findUnique({ where: { key: serviceKey } })
+  if (!service) {
+    return null
+  }
+
+  // Check expiration
+  if (service.expiresAt && service.expiresAt < new Date()) {
+    return null
+  }
+
+  return service.name
+}
+
 const validateAccessToken = async (accessToken: string | undefined): Promise<void> => {
   if (!accessToken) {
     throw new Error("Unauthorized")
   }
+
+  const serviceName = await validateServiceKey(accessToken)
+  if (serviceName) {
+    console.log(`MCP request authenticated with service key: ${serviceName}`)
+    return
+  }
+
   const user = await db.user.findUnique({ where: { accessToken } })
   if (!user) {
     throw new Error("Unauthorized")
