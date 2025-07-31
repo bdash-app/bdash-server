@@ -119,14 +119,12 @@ const validateAccessToken = async (accessToken: string | undefined): Promise<voi
     throw new Error("Unauthorized")
   }
 
-  // Try service key first
   const serviceName = await validateServiceKey(accessToken)
   if (serviceName) {
     console.log(`MCP request authenticated with service key: ${serviceName}`)
     return
   }
 
-  // Fallback to user access token
   const user = await db.user.findUnique({ where: { accessToken } })
   if (!user) {
     throw new Error("Unauthorized")
