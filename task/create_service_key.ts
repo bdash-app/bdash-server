@@ -78,7 +78,6 @@ async function createServiceKey() {
       console.log("Expires: Never")
     }
     console.log(`Created: ${created.createdAt.toISOString()}`)
-
   } catch (error) {
     if (error.code === "P2002") {
       console.error("❌ Service key already exists")
