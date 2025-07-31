@@ -14,13 +14,28 @@ function parseArgs(): ServiceKeyArgs {
   for (let i = 0; i < args.length; i++) {
     switch (args[i]) {
       case "--name":
-        parsed.name = args[++i]
+        if (i + 1 < args.length) {
+          parsed.name = args[++i]
+        } else {
+          console.error("❌ Missing value for --name")
+          process.exit(1)
+        }
         break
       case "--key":
-        parsed.key = args[++i]
+        if (i + 1 < args.length) {
+          parsed.key = args[++i]
+        } else {
+          console.error("❌ Missing value for --key")
+          process.exit(1)
+        }
         break
       case "--expires":
-        parsed.expires = args[++i]
+        if (i + 1 < args.length) {
+          parsed.expires = args[++i]
+        } else {
+          console.error("❌ Missing value for --expires")
+          process.exit(1)
+        }
         break
     }
   }
