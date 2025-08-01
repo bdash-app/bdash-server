@@ -7,7 +7,7 @@ import { searchBdashQueries } from "app/core/lib/searchBdashQueries"
 
 type BdashQueryRow = Pick<
   BdashQuery,
-  "id" | "title" | "description" | "query_sql" | "updatedAt" | "data_source_info"
+  "id" | "id_hash" | "title" | "description" | "query_sql" | "updatedAt" | "data_source_info"
 >
 
 interface DataSourceInfo {
@@ -21,8 +21,10 @@ const formatSearchResult = (query: BdashQueryRow, index: number): string => {
   const dataSourceInfo = query.data_source_info
     ? (JSON.parse(query.data_source_info) as DataSourceInfo)
     : null
+  const queryUrl = `${process.env.WEB_HOST}/query/${query.id_hash}`
   return `${index + 1}. **${query.title}**
 
+URL: ${queryUrl}
 Data Source:
     - Type: ${dataSourceInfo?.type ?? "Unknown"}
     - Host: ${dataSourceInfo?.host ?? "Unknown"}
@@ -71,6 +73,7 @@ mcpServer.tool(
         keyword,
         {
           id: true,
+          id_hash: true,
           title: true,
           description: true,
           query_sql: true,
