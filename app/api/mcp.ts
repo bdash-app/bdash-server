@@ -55,45 +55,91 @@ const transport = new StreamableHTTPServerTransport({
 
 mcpServer.tool(
   "search_bdash_queries",
-  "Search SQL queries on Bdash Server. You can search by title, description, or SQL content.",
+  "Search SQL queries on Bdash Server. You can search by keyword (searches in title, description, and SQL content) or provide a Bdash Server query URL to get specific query details.",
   {
     keyword: z
       .string()
-      .describe("Search keyword (searches in title, description, and SQL content)"),
+      .describe(
+        "Search keyword or Bdash Server query URL (format: https://domain/query/query_hash)"
+      ),
   },
   async ({ keyword }) => {
     if (!keyword || typeof keyword !== "string") {
-      throw new Error("Search keyword is required")
+      throw new Error("Search keyword or URL is required")
     }
 
     try {
-      const limit = 10
+      // Check if input is a Bdash Server query URL
+      const urlPattern = new RegExp(`^https?://[^/]+/query/([a-zA-Z0-9_-]+)$`)
+      const urlMatch = keyword.match(urlPattern)
 
-      const searchResults = await searchBdashQueries(
-        keyword,
-        {
-          id: true,
-          id_hash: true,
-          title: true,
-          description: true,
-          query_sql: true,
-          updatedAt: true,
-          data_source_info: true,
-        },
-        limit
-      )
+      if (urlMatch) {
+        // Extract query_hash from URL
+        const queryHash = urlMatch[1]
 
-      return {
-        content: [
-          {
-            type: "text",
-            text: `Found ${
-              searchResults.length
-            } queries for keyword "${keyword}":\n\n${searchResults
-              .map((query, index) => formatSearchResult(query, index))
-              .join("\n")}`,
+        // Query database directly by id_hash
+        const query = await db.bdashQuery.findUnique({
+          where: { id_hash: queryHash },
+          select: {
+            id: true,
+            id_hash: true,
+            title: true,
+            description: true,
+            query_sql: true,
+            updatedAt: true,
+            data_source_info: true,
           },
-        ],
+        })
+
+        if (!query) {
+          return {
+            content: [
+              {
+                type: "text",
+                text: `Query not found for URL: ${keyword}`,
+              },
+            ],
+          }
+        }
+
+        return {
+          content: [
+            {
+              type: "text",
+              text: `Query details for URL: ${keyword}\n\n${formatSearchResult(query, 0)}`,
+            },
+          ],
+        }
+      } else {
+        // Perform keyword search
+        const limit = 10
+
+        const searchResults = await searchBdashQueries(
+          keyword,
+          {
+            id: true,
+            id_hash: true,
+            title: true,
+            description: true,
+            query_sql: true,
+            updatedAt: true,
+            data_source_info: true,
+          },
+          limit
+        )
+
+        return {
+          content: [
+            {
+              type: "text",
+              text: `Found ${
+                searchResults.length
+              } queries for keyword "${keyword}":\n\n${searchResults
+                .map((query, index) => formatSearchResult(query, index))
+                .join("\n")}`,
+            },
+          ],
+        }
       }
     } catch (error) {
       throw new Error(`Error occurred during search: ${error.message}`)
